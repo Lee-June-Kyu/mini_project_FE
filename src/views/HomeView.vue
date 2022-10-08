@@ -1,5 +1,8 @@
 <template>
-  <hello-world />
+  <div>
+    홈화면
+    <hello-world />
+  </div>
 </template>
 
 <script>
