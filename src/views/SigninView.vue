@@ -1,5 +1,5 @@
 <template>
-  <div>로그인 화면 가보자</div>
+  <div>로그인 수정되냐</div>
 </template>
 
 <script>
