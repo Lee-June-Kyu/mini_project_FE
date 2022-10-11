@@ -1,9 +1,20 @@
 <template>
-  <div>마이페이지</div>
+  <div>
+    <side-bar></side-bar>
+    마이페이지
+  </div>
 </template>
 
 <script>
-export default {}
+import SideBar from '@/components/SideBar.vue'
+
+export default {
+  name: 'Mypage',
+
+  components: {
+    SideBar
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

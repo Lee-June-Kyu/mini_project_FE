@@ -1,9 +1,16 @@
 <template>
-  <div>알림장</div>
+  <div><side-bar></side-bar>알림장</div>
 </template>
 
 <script>
-export default {}
+import SideBar from '@/components/SideBar.vue'
+export default {
+  name: 'Notepad',
+
+  components: {
+    SideBar
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>
