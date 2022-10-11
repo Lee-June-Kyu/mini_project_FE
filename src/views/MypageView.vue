@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <side-bar></side-bar>
     마이페이지
@@ -15,6 +16,7 @@ export default {
     SideBar
   }
 }
+
 </script>
 
 <style lang="scss" scoped></style>
