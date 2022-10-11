@@ -1,9 +1,21 @@
 <template>
-  <div>출결관리화면</div>
+
+  <div>
+    <side-bar></side-bar>
+    출결관리화면
+  </div>
 </template>
 
 <script>
-export default {}
+import SideBar from '@/components/SideBar.vue'
+export default {
+  name: 'AttendanceHistory',
+
+  components: {
+    SideBar
+  }
+}
+
 </script>
 
 <style lang="scss" scoped></style>

@@ -1,9 +1,19 @@
 <template>
-  <div>출석확인페이지</div>
+  <div>
+    <side-bar></side-bar>
+    출석확인페이지
+  </div>
 </template>
 
 <script>
-export default {}
+import SideBar from '@/components/SideBar.vue'
+export default {
+  name: 'AttendanceChcek',
+
+  components: {
+    SideBar
+  }
+}
 </script>
 
 <style lang="scss" scoped></style>

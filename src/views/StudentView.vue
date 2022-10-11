@@ -1,9 +1,18 @@
 <template>
-  <div>학생관리페이지</div>
+
+  <div><side-bar></side-bar>학생관리페이지</div>
 </template>
 
 <script>
-export default {}
+import SideBar from '@/components/SideBar.vue'
+export default {
+  name: 'Student',
+
+  components: {
+    SideBar
+  }
+}
+
 </script>
 
 <style lang="scss" scoped></style>
