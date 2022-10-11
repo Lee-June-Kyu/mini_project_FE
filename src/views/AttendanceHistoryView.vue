@@ -1,21 +1,19 @@
 <template>
   <div>
     <side-bar></side-bar>
-    홈화면
-    <hello-world />
+    출결관리화면
   </div>
 </template>
 
 <script>
 import SideBar from '@/components/SideBar.vue'
-import HelloWorld from '../components/HelloWorld'
-
 export default {
-  name: 'Home',
+  name: 'AttendanceHistory',
 
   components: {
-    HelloWorld,
     SideBar
   }
 }
 </script>
+
+<style lang="scss" scoped></style>
