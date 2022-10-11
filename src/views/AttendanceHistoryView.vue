@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <side-bar></side-bar>
     출결관리화면
@@ -14,6 +15,7 @@ export default {
     SideBar
   }
 }
+
 </script>
 
 <style lang="scss" scoped></style>

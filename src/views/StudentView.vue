@@ -1,4 +1,5 @@
 <template>
+
   <div><side-bar></side-bar>학생관리페이지</div>
 </template>
 
@@ -11,6 +12,7 @@ export default {
     SideBar
   }
 }
+
 </script>
 
 <style lang="scss" scoped></style>
