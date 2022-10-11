@@ -1,21 +1,19 @@
 <template>
   <div>
     <side-bar></side-bar>
-    홈화면
-    <hello-world />
+    출석확인페이지
   </div>
 </template>
 
 <script>
 import SideBar from '@/components/SideBar.vue'
-import HelloWorld from '../components/HelloWorld'
-
 export default {
-  name: 'Home',
+  name: 'AttendanceChcek',
 
   components: {
-    HelloWorld,
     SideBar
   }
 }
 </script>
+
+<style lang="scss" scoped></style>
