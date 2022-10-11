@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <side-bar></side-bar>
     스케쥴페이지
@@ -15,7 +14,6 @@ export default {
     SideBar
   }
 }
-
 </script>
 
 <style lang="scss" scoped></style>

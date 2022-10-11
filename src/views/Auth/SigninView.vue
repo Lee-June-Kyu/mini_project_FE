@@ -16,7 +16,7 @@
                     outlined
                     type="email"
                     label="이메일"
-                    placeholder="이메일"
+                    placeholder="example@uvc.co.kr"
                     color="#aed581"
                     :error-messages="errors"
                   ></v-text-field>

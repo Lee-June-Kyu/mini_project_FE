@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="mainBackground">
       <router-view></router-view>
     </v-main>
   </v-app>
@@ -15,3 +15,9 @@ export default {
   })
 }
 </script>
+<style>
+.mainBackground {
+  background: url('images/main.png') no-repeat;
+  background-size: 100%;
+}
+</style>
