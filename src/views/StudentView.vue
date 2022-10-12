@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <side-bar></side-bar>
     <div>
@@ -56,7 +55,6 @@
       @closeDialog="closeLookupStudentModal"
     ></LookupStudentModal>
   </div>
-
 </template>
 
 <script>
@@ -187,11 +185,12 @@ export default {
 .studentPageContent {
   width: 90%;
   padding: 50px;
+  padding-bottom: 0px;
   padding-top: 10px;
   margin: auto;
 }
 .studentPageHeader {
-  margin: 80px 100px 30px 100px;
+  margin: 70px 100px 30px 100px;
   display: flex;
   align-content: flex-end;
   flex-direction: column;
