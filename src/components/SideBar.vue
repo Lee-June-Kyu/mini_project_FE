@@ -3,7 +3,7 @@
     <!-- 내브바 서랍 메뉴 -->
     <v-navigation-drawer app permanent class="light-green lighten-3">
       <v-list nav dense>
-        <v-list-item>
+        <v-list-item class="navbarInfo">
           <div class="navbarUserInfoBox">
             <v-list-item-title>
               <br />
