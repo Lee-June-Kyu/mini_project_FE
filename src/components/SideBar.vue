@@ -19,7 +19,7 @@
             </v-list-item-title>
             <div class="navbarUserBtnBox">
               <v-btn plain class="mypageBtn" x-small @click="goMyPage">마이페이지</v-btn>
-              <v-btn plain class="signoutBtn" x-small>로그아웃</v-btn>
+              <v-btn plain class="signoutBtn" x-small @click="logOut">로그아웃</v-btn>
             </div>
           </div>
         </v-list-item>
@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'SideBar',
 
@@ -89,6 +91,26 @@ export default {
     },
     goMyPage() {
       this.$router.push('/mypage')
+    },
+    async logOut() {
+      await axios
+        .post(
+          process.env.VUE_APP_URL + '/logout',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+        .then(response => {
+          console.log('logOut - response : ', response)
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+        })
+        .catch(error => {
+          console.log('logOut - error : ', error)
+        })
     },
     goAttendPage() {
       this.$router.push('/attend')
@@ -145,6 +167,6 @@ export default {
 }
 
 .navbarInfo {
-  background: url('../images/sidebar.png') no-repeat;
+  background: url('../assets/images/sidebar.png') no-repeat;
 }
 </style>

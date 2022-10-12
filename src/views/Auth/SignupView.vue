@@ -75,7 +75,7 @@
                     :error-messages="errors"
                   ></v-text-field>
                 </ValidationProvider>
-                <span>에러메세지 추가 예정</span>
+                <span class="err">{{ errorMessage }}</span>
                 <div class="d-flex justify-end">
                   <v-btn
                     depressed
@@ -85,6 +85,7 @@
                     type="submit"
                     :loading="loading"
                     :disabled="invalid || !validate"
+                    @click="signUp"
                     >가입하기
                   </v-btn>
                 </div>
@@ -98,10 +99,59 @@
 </template>
 <script>
 import Validate from '@/mixins/Validate.vue'
+import axios from 'axios'
 
 export default {
   name: 'SignUp',
-  mixins: [Validate]
+  mixins: [Validate],
+  data() {
+    return {
+      email: '',
+      password: '',
+      teacherName: '',
+      teacherNumber: '',
+      className: '',
+      confirmPassword: '',
+      loading: false,
+      errorMessage: ''
+    }
+  },
+  methods: {
+    async signUp() {
+      if (this.loading) return
+      this.loading = true
+
+      const axiosBody = {
+        email: this.email,
+        password: this.password,
+        name: this.teacherName,
+        phoneNum: this.teacherNumber,
+        className: this.className
+      }
+      console.log('회원가입 axiosBody : ', axiosBody)
+
+      await axios
+        .post(process.env.VUE_APP_URL + '/join/', axiosBody)
+        .then(async response => {
+          console.log('회원가입 response : ', response)
+          // localStorage.setItem('token', response.data.token)
+
+          this.$router.push('/signin')
+        })
+        .catch(error => {
+          console.log('회원가입 error : ', error)
+
+          // 에러문구 표시
+          this.$refs.signUpForm.setErrors({
+            이메일: ['이미 가입된 이메일입니다.']
+          })
+          this.errorMessage = '회원가입이 실패했습니다. 이메일 혹은 전화번호를 확인 해주세요.'
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    }
+  }
 }
 </script>
 
@@ -114,5 +164,8 @@ export default {
   height: 100%;
   padding: 15px 20px;
   margin: 5px auto;
+}
+.err {
+  color: red;
 }
 </style>

@@ -154,8 +154,8 @@ export default {
   },
   computed: {
     filterStudents() {
-      return this.students.filter(p => {
-        return p.name.includes(this.search)
+      return this.students.filter(student => {
+        return student.name.includes(this.search)
       })
     }
   },
@@ -184,12 +184,13 @@ export default {
 <style lang="scss" scoped>
 .studentPageContent {
   width: 90%;
-  padding: 50px;
+  padding: 5%;
+  padding-bottom: 0px;
   padding-top: 10px;
   margin: auto;
 }
 .studentPageHeader {
-  margin: 80px 100px 30px 100px;
+  margin: 70px 100px 30px 100px;
   display: flex;
   align-content: flex-end;
   flex-direction: column;
