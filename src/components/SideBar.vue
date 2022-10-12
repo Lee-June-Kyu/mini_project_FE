@@ -50,7 +50,7 @@
           <v-list-item-icon>
             <v-icon>mdi-calendar-plus</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>스케쥴 관리</v-list-item-title>
+          <v-list-item-title>시간표 관리</v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item link @click="goAttendHistoryPage">
