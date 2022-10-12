@@ -1,5 +1,4 @@
 <template>
-
   <div>
     <side-bar></side-bar>
     <div>
@@ -56,7 +55,6 @@
       @closeDialog="closeLookupStudentModal"
     ></LookupStudentModal>
   </div>
-
 </template>
 
 <script>
