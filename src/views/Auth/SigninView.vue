@@ -33,7 +33,7 @@
                     :error-messages="errors"
                   ></v-text-field>
                 </ValidationProvider>
-                <span>에러메세지(아이디 없거나 비밀번호가 일치하지 않습니다)</span>
+                <span class="err">{{ errorMessage }}</span>
                 <div class="d-flex justify-space-between">
                   <v-btn text color="primary" class="pl-0" router to="signup">계정 만들기</v-btn>
                   <v-btn depressed color="primary" class="blue" type="submit" :disabled="invalid || !validate"
@@ -49,11 +49,81 @@
   </v-container>
 </template>
 <script>
+import axios from 'axios'
+
 import Validate from '@/mixins/Validate.vue'
 
 export default {
   name: 'SignIn',
-  mixins: [Validate]
+  mixins: [Validate],
+
+  data: () => ({
+    email: '',
+    password: '',
+    loading: false,
+    errorMessage: ''
+  }),
+
+  methods: {
+    //로그인
+    async signIn() {
+      if (this.loading) return
+      this.loading = true
+
+      const axiosBody = {
+        email: this.email,
+        password: this.password
+      }
+      console.log('auth/login - axiosBody : ', axiosBody)
+
+      await axios
+        .post(process.env.VUE_APP_URL + '/login', axiosBody)
+        .then(async response => {
+          console.log('auth/login - response : ', response)
+          localStorage.setItem('token', response.data.token)
+
+          // 로컬 스토리지에 유저 정보 저장
+          await axios
+            .post(
+              process.env.VUE_APP_URL + '/login/me',
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${response.data.token}`
+                }
+              }
+            )
+            .then(_response => {
+              localStorage.setItem('user', JSON.stringify(_response.data.data))
+              this.$router.push('/')
+            })
+            .catch(_error => {
+              console.log('/login/me - _error : ', _error)
+
+              // 에러문구 표시
+              this.$refs.signInForm.setErrors({
+                이메일: ['이메일을 확인해주세요.'],
+                비밀번호: ['비밀번호를 확인해주세요.']
+              })
+              this.errorMessage = '로그인 실패하였습니다.'
+
+              this.loading = false
+            })
+        })
+        .catch(error => {
+          console.log('login - error : ', error)
+
+          // 에러문구 표시
+          this.$refs.signInForm.setErrors({
+            이메일: ['이메일을 확인해주세요.'],
+            비밀번호: ['비밀번호를 확인해주세요.']
+          })
+          this.errorMessage = '로그인 실패하였습니다.'
+
+          this.loading = false
+        })
+    }
+  }
 }
 </script>
 
@@ -66,5 +136,9 @@ export default {
   height: 100%;
   padding: 15px 20px;
   margin: 5px auto;
+}
+
+.err {
+  color: red;
 }
 </style>

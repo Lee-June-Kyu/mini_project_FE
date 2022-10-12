@@ -17,7 +17,7 @@ export default {
 </script>
 <style>
 .mainBackground {
-  background: url('images/main.png') no-repeat;
+  background: url('assets/images/main.png') no-repeat;
   background-size: 100%;
 }
 </style>
