@@ -10,7 +10,10 @@
 
 <script>
 import SideBar from '@/components/SideBar.vue'
+<<<<<<< Updated upstream
 import axios from 'axios'
+=======
+>>>>>>> Stashed changes
 
 export default {
   name: 'AttendanceChcek',
@@ -88,6 +91,7 @@ export default {
 }
 </script>
 
+<<<<<<< Updated upstream
 <style>
 .fullscreenbtn {
   margin: 15px;
@@ -95,3 +99,6 @@ export default {
   justify-content: flex-end;
 }
 </style>
+=======
+<style></style>
+>>>>>>> Stashed changes
