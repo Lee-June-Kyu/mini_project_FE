@@ -98,7 +98,9 @@ export default {
     },
     logOut() {
       localStorage.removeItem('token')
-      localStorage.removeItem('user')
+      // localStorage.removeItem('user')
+      this.$store.dispatch('actUserInfo', {})
+      this.$router.push('/signin')
     },
     goAttendPage() {
       this.$router.push('/attend')
