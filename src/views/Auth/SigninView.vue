@@ -94,7 +94,8 @@ export default {
               }
             )
             .then(_response => {
-              localStorage.setItem('user', JSON.stringify(_response.data.data))
+              // localStorage.setItem('user', JSON.stringify(_response.data.data))
+              this.$store.dispatch('actUserInfo', _response.data.data)
               this.$router.push('/')
             })
             .catch(_error => {
