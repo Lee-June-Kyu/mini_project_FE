@@ -96,25 +96,9 @@ export default {
     goMyPage() {
       this.$router.push('/mypage')
     },
-    async logOut() {
-      await axios
-        .post(
-          process.env.VUE_APP_URL + '/logout',
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-          }
-        )
-        .then(response => {
-          console.log('logOut - response : ', response)
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-        })
-        .catch(error => {
-          console.log('logOut - error : ', error)
-        })
+    logOut() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
     },
     goAttendPage() {
       this.$router.push('/attend')
