@@ -85,7 +85,7 @@ export default {
           // 로컬 스토리지에 유저 정보 저장
           await axios
             .post(
-              process.env.VUE_APP_URL + '/aute/login/me',
+              process.env.VUE_APP_URL + '/auth/login/me',
               {},
               {
                 headers: {
@@ -94,7 +94,8 @@ export default {
               }
             )
             .then(_response => {
-              localStorage.setItem('user', JSON.stringify(_response.data.data))
+              // localStorage.setItem('user', JSON.stringify(_response.data.data))
+              this.$store.dispatch('actUserInfo', _response.data.data)
               this.$router.push('/')
             })
             .catch(_error => {

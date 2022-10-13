@@ -128,24 +128,24 @@ export default {
         phoneNum: this.teacherNumber,
         className: this.className
       }
-      console.log('auth/register - axiosBody : ', axiosBody)
+      console.log('회원가입 axiosBody : ', axiosBody)
 
       await axios
-        .post(process.env.VUE_APP_URL + '/join/', axiosBody)
+        .post(process.env.VUE_APP_URL + '/auth/join', axiosBody)
         .then(async response => {
-          console.log('auth/login - response : ', response)
-          localStorage.setItem('token', response.data.token)
+          console.log('회원가입 response : ', response)
+          // localStorage.setItem('token', response.data.token)
 
           this.$router.push('/signin')
         })
         .catch(error => {
-          console.log('auth/login - error : ', error)
+          console.log('회원가입 error : ', error)
 
           // 에러문구 표시
           this.$refs.signUpForm.setErrors({
             이메일: ['이미 가입된 이메일입니다.']
           })
-          this.errorMessage = '회원가입이 실패했습니다. 이메일을 확인 해주세요.'
+          this.errorMessage = '회원가입이 실패했습니다. 이메일 혹은 전화번호를 확인 해주세요.'
         })
         .finally(() => {
           this.loading = false
