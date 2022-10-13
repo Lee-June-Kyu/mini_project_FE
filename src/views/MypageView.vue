@@ -9,7 +9,7 @@
         <span class="redStar">* </span><span>학원 이름</span>
         <v-text-field v-model="className" dense outlined color="light-green lighten-4"></v-text-field>
         <span class="redStar">* </span><span>연락처</span>
-        <v-text-field v-model="teacherNumber" outlined dense color="light-green lighten-4"></v-text-field>
+        <v-text-field v-model="phoneNum" outlined dense color="light-green lighten-4"></v-text-field>
         <span class="redStar">* </span><span>비밀번호</span>
         <v-text-field v-model="password" outlined dense color="light-green lighten-4" type="password"></v-text-field>
         <div class="btnArea">
@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <DeleteUserModal :open-dialog="statusModal" @closeDialog="closeModal"></DeleteUserModal>
+    <DeleteUserModal :open-dialog="statusModal" :user-id="uId" @closeDialog="closeModal"></DeleteUserModal>
   </div>
 </template>
 
@@ -37,12 +37,20 @@ export default {
 
   data() {
     return {
-      name: '나선생',
-      className: '뿌리학원',
-      teacherNumber: '01012341234',
-      password: '123456789',
+      name: '',
+      className: '',
+      phoneNum: '',
+      password: '',
       statusModal: false
     }
+  },
+  computed: {
+    uId() {
+      return this.$store.getters.User.id
+    }
+  },
+  mounted() {
+    this.getUserInfo()
   },
   methods: {
     closeModal() {
@@ -61,13 +69,13 @@ export default {
       const axiosBody = {
         password: this.password,
         name: this.name,
-        phoneNum: this.teacherNumber,
+        phoneNum: this.phoneNum,
         className: this.className
       }
       console.log('회원정보수정 axiosBody : ', axiosBody)
 
       await axios
-        .patch(process.env.VUE_APP_URL + `/edit/${user.id}`, axiosBody, {
+        .patch(process.env.VUE_APP_URL + `/auth/${user.id}`, axiosBody, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -81,6 +89,29 @@ export default {
         })
         .catch(error => {
           console.log('회원정보수정 error : ', error)
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+    async getUserInfo() {
+      if (this.loading) return
+      this.loading = true
+      const userId = this.$store.getters.User.id
+      await axios
+        .get(process.env.VUE_APP_URL + `/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async response => {
+          console.log('회원정보조회 response : ', response)
+          this.name = response.data.data.name
+          this.className = response.data.data.className
+          this.phoneNum = response.data.data.phoneNum
+        })
+        .catch(error => {
+          console.log('회원정보조회 error : ', error)
         })
         .finally(() => {
           this.loading = false

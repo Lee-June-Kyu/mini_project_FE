@@ -77,7 +77,7 @@ export default {
       console.log('auth/login - axiosBody : ', axiosBody)
 
       await axios
-        .post(process.env.VUE_APP_URL + '/login', axiosBody)
+        .post(process.env.VUE_APP_URL + '/auth/login', axiosBody)
         .then(async response => {
           console.log('auth/login - response : ', response)
           localStorage.setItem('token', response.data.token)
@@ -85,7 +85,7 @@ export default {
           // 로컬 스토리지에 유저 정보 저장
           await axios
             .post(
-              process.env.VUE_APP_URL + '/login/me',
+              process.env.VUE_APP_URL + '/auth/login/me',
               {},
               {
                 headers: {
