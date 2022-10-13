@@ -10,7 +10,7 @@
           <div class="navbarUserInfoBox">
             <v-list-item-title>
               <br />
-              <span class="navBarUserInfoTitle">안녕하세요 OOO님</span>
+              <span class="navBarUserInfoTitle">안녕하세요 {{ userInfo.name }}</span>
               <br />
               <span class="navBarUserInfoComment"> Wanni 입니다.</span>
               <br />
@@ -73,18 +73,22 @@
 
 <script>
 import axios from 'axios'
+// import {mapState, mapActions} from 'vuex'
 
 export default {
   name: 'SideBar',
 
-  data: () => ({
-    //
-  }),
+  data: () => ({}),
   items: [
     {
       name: '한개'
     }
   ],
+  computed: {
+    userInfo() {
+      return this.$store.getters.User
+    }
+  },
   methods: {
     goHome() {
       this.$router.push('/')
@@ -92,25 +96,9 @@ export default {
     goMyPage() {
       this.$router.push('/mypage')
     },
-    async logOut() {
-      await axios
-        .post(
-          process.env.VUE_APP_URL + '/logout',
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-          }
-        )
-        .then(response => {
-          console.log('logOut - response : ', response)
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-        })
-        .catch(error => {
-          console.log('logOut - error : ', error)
-        })
+    logOut() {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
     },
     goAttendPage() {
       this.$router.push('/attend')

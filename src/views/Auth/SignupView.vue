@@ -131,7 +131,7 @@ export default {
       console.log('회원가입 axiosBody : ', axiosBody)
 
       await axios
-        .post(process.env.VUE_APP_URL + '/join/', axiosBody)
+        .post(process.env.VUE_APP_URL + '/auth/join', axiosBody)
         .then(async response => {
           console.log('회원가입 response : ', response)
           // localStorage.setItem('token', response.data.token)
