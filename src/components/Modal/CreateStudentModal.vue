@@ -9,14 +9,14 @@
       </div>
 
       <form>
-        <v-text-field class="textField" label="학생 이름" outlined></v-text-field>
-        <v-text-field class="textField" label="학생 학년" outlined></v-text-field>
-        <v-text-field class="textField" label="학교 명" outlined></v-text-field>
-        <v-text-field class="textField" label="학부모 연락처" outlined></v-text-field>
-        <v-text-field class="textField" label="ETC" outlined></v-text-field>
+        <v-text-field v-model="bodyObj.stuName" class="textField" label="학생 이름" outlined></v-text-field>
+        <v-text-field v-model="bodyObj.stuGrade" class="textField" label="학생 학년" outlined></v-text-field>
+        <v-text-field v-model="bodyObj.school" class="textField" label="학교 명" outlined></v-text-field>
+        <v-text-field v-model="bodyObj.phoneNum" class="textField" label="학부모 연락처" outlined></v-text-field>
+        <v-text-field v-model="bodyObj.etc" class="textField" label="기타메모" outlined></v-text-field>
         <div class="modalBottom">
           <div></div>
-          <v-btn>추가하기</v-btn>
+          <v-btn @click="createStudent">추가하기</v-btn>
         </div>
       </form>
     </v-card>
@@ -24,9 +24,21 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   props: {
     openDialog: Boolean
+  },
+  data() {
+    return {
+      bodyObj: {
+        stuName: '',
+        stuGrade: '',
+        school: '',
+        phoneNum: '',
+        etc: ''
+      }
+    }
   },
   computed: {
     dialog(props) {
@@ -36,6 +48,22 @@ export default {
   methods: {
     closeModal() {
       this.$emit('closeDialog')
+    },
+    async createStudent() {
+      let axiosbody = this.bodyObj
+      await axios
+        .post(process.env.VUE_APP_URL + `/students/${this.$store.getters.User.id}`, axiosbody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async response => {
+          console.log('학생 정보 생성 response : ', response)
+          this.closeModal()
+        })
+        .catch(error => {
+          console.log('학생 정보 생성 error : ', error)
+        })
     }
   }
 }

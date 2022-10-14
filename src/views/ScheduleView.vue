@@ -93,6 +93,8 @@ export default {
         const second = new Date(first.getTime() + secondTimestamp)
 
         events.push({
+          // 이름 시작시간, 끝나는시간 , 색상
+          // 이름은 스트링으로 길게 넣어야 할 듯함 !
           name: this.names[this.rnd(0, this.names.length - 1)],
           start: first,
           end: second,

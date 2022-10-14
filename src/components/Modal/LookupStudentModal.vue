@@ -11,23 +11,28 @@
       <div class="modalContent">
         <div class="studentContent">
           <span>이름</span>
-          <span v-if="!inputStatus">{{ getItem.name }}</span>
-          <input v-else v-model="getSubItem.name" type="text" class="updateInput" />
+          <span v-if="!inputStatus">{{ getItem.stuName }}</span>
+          <input v-else v-model="getSubItem.stuName" type="text" class="updateInput" />
         </div>
         <v-divider class="dividers"></v-divider>
         <div class="studentContent">
-          <span>학교</span> <span v-if="!inputStatus">{{ getItem.schoolName }}</span>
-          <input v-else v-model="getSubItem.schoolName" type="text" class="updateInput" />
+          <span>학교</span> <span v-if="!inputStatus">{{ getItem.school }}</span>
+          <input v-else v-model="getSubItem.school" type="text" class="updateInput" />
         </div>
         <v-divider class="dividers"></v-divider>
         <div class="studentContent">
-          <span>학년</span> <span v-if="!inputStatus">{{ getItem.grade }}</span>
-          <input v-else v-model="getSubItem.grade" type="text" class="updateInput" />
+          <span>학년</span> <span v-if="!inputStatus">{{ getItem.stuGrade }}</span>
+          <input v-else v-model="getSubItem.stuGrade" type="text" class="updateInput" />
         </div>
         <v-divider class="dividers"></v-divider>
         <div class="studentContent">
-          <span>부모님 연락처</span> <span v-if="!inputStatus">{{ getItem.phoneNumber }}</span>
-          <input v-else v-model="getSubItem.phoneNumber" type="text" class="updateInput" />
+          <span>부모님 연락처</span> <span v-if="!inputStatus">{{ getItem.phoneNum }}</span>
+          <input v-else v-model="getSubItem.phoneNum" type="text" class="updateInput" />
+        </div>
+        <v-divider class="dividers"></v-divider>
+        <div class="studentContent">
+          <span>기타메모</span> <span v-if="!inputStatus">{{ getItem.etc }}</span>
+          <input v-else v-model="getSubItem.etc" type="text" class="updateInput" />
         </div>
         <v-divider class="dividers"></v-divider>
         <div class="studentContent">
@@ -41,6 +46,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   props: {
     openDialog: Boolean,
@@ -64,14 +70,36 @@ export default {
   },
   methods: {
     closeModal() {
+      this.inputStatus = !this.inputStatus
       this.$emit('closeDialog')
     },
     changeStatus() {
       this.inputStatus = !this.inputStatus
     },
-    updateInfo() {
-      console.log('수정완료')
+    async updateInfo() {
       this.inputStatus = !this.inputStatus
+      let axiosbody = {}
+      axiosbody.stuName = this.getItem.stuName
+      axiosbody.school = this.getItem.school
+      axiosbody.stuGrade = this.getItem.stuGrade
+      axiosbody.phoneNum = this.getItem.phoneNum
+      axiosbody.etc = this.getItem.etc
+
+      await axios
+        .patch(process.env.VUE_APP_URL + `/students/${this.getItem.id}`, axiosbody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async response => {
+          console.log('학생 정보 조회 response : ', response)
+          console.log('성공', this.getItem.id)
+          this.closeModal()
+        })
+        .catch(error => {
+          console.log('실패', this.getItem.id)
+          console.log('학생 정보 조회 error : ', error)
+        })
     }
   }
 }
