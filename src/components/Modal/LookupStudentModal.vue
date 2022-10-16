@@ -93,11 +93,9 @@ export default {
         })
         .then(async response => {
           console.log('학생 정보 조회 response : ', response)
-          console.log('성공', this.getItem.id)
           this.closeModal()
         })
         .catch(error => {
-          console.log('실패', this.getItem.id)
           console.log('학생 정보 조회 error : ', error)
         })
     }
