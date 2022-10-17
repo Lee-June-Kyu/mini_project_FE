@@ -22,40 +22,86 @@
           <div id="time"></div>
         </div>
         <div class="checkBox">
-          <div class="maleImgDiv">
+          <div v-for="student in students" :key="student.index" class="maleImgDiv">
             <div class="nameBox">
-              <span style="grid-row: 1">이상훈</span>
-              <span id="timeNow" style="grid-row: 2">OO 00:00:00</span>
-              <div>
-                <v-btn @click="displayDate()">출석하기</v-btn>
-              </div>
+              <v-btn text style="font-size: 1.5em" @click="openStudentStatus(student)">{{ student.name }}</v-btn>
+              <span>{{ student.checkTime }}</span>
+              <v-btn text @click="displayDate(student)">출석하기</v-btn>
             </div>
           </div>
           <!-- <div class="femaleImgDiv"></div> -->
         </div>
       </div>
     </div>
+    <LookupStudentModal
+      :open-dialog="statusLookupModal"
+      :item-object="itemObj"
+      @closeDialog="closeStudentStatus"
+    ></LookupStudentModal>
   </div>
 </template>
 
 <script>
 import SideBar from '@/components/SideBar.vue'
 import axios from 'axios'
+import LookupStudentModal from '@/components/Modal/LookupStudentModal.vue'
 
 export default {
   name: 'AttendanceChcek',
 
   components: {
-    SideBar
+    SideBar,
+    LookupStudentModal
   },
 
   data: () => ({
     userPassword: Boolean,
 
-    inputStatus: false
+    inputStatus: false,
+    statusLookupModal: false,
+    itemObj: {},
+
+    students: [
+      {
+        name: '이준규',
+        schoolName: '준규초',
+        grade: 1,
+        phoneNumber: '010-1234-1234',
+        checkTime: '출석전'
+      },
+      {
+        name: '원영준',
+        schoolName: '준규초',
+        grade: 2,
+        phoneNumber: '010-1234-1234',
+        checkTime: '출석전'
+      },
+      {
+        name: '이상훈',
+        schoolName: '준규초',
+        grade: 1,
+        phoneNumber: '010-1234-1234',
+        checkTime: '출석전'
+      }
+    ]
   }),
+
+  computed: {
+    checkStudents() {
+      return this.student
+    }
+  },
   mounted() {
-    this.setTimef()
+    //시계 함수 테그 id가 time인곳에 나타나게함
+    //로컬 시간을 가져온 방법
+    this.timerInterval = setInterval(() => {
+      const now = new Date()
+      document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
+    }, 1000) // 1초마다 함수 실행되도록 설정
+  },
+  destroyed() {
+    //setInterval(계속 반복된 함수를 지워주는 함수)
+    clearInterval(this.timerInterval)
   },
 
   methods: {
@@ -119,18 +165,9 @@ export default {
           }
         })
     },
-    //시계 함수 테그 id가 time인곳에 나타나게함
-    //로컬 시간을 가져온 방법
-    setTimef() {
-      {
-        const now = new Date()
-        document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
-      }
-      setInterval(this.setTimef, 1000) // 0.5초마다 함수 실행되도록 설정
-    },
     //출석시간을 체크하기위한 함수
     //Date안 요소들을 가져와서 설정해준 방법
-    displayDate() {
+    displayDate(student) {
       const now = new Date()
       let hours = now.getHours()
       let minutes = now.getMinutes()
@@ -155,7 +192,16 @@ export default {
       if (seconds < 10) {
         seconds = '0' + seconds
       }
-      document.getElementById('timeNow').innerHTML = ampm + hours + ':' + minutes + ':' + seconds
+      student.checkTime = ampm + hours + ':' + minutes + ':' + seconds
+    },
+    openStudentStatus(items) {
+      this.itemObj = items
+      this.statusLookupModal = true
+      console.log('모달클릭', this.statusLookupModal)
+    },
+    closeStudentStatus() {
+      console.log('모달닫기', this.statusLookupModal)
+      this.statusLookupModal = false
     }
   }
 }
@@ -169,6 +215,7 @@ export default {
   margin: 15px;
   display: flex;
   justify-content: flex-end;
+  overflow: hidden;
 }
 
 .checkPageHeader {
@@ -181,6 +228,7 @@ export default {
 .denger {
   width: 15vh;
   color: red;
+  overflow: hidden;
 }
 
 .checkPageContent {
@@ -197,8 +245,12 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 15%;
-  padding-bottom: 4%;
+  height: 13%;
+  margin-bottom: 4%;
+  font-family: 'Noto Serif', serif;
+  font-size: 3em;
+  width: 100%;
+  overflow: hidden;
 }
 
 .checkBox {
@@ -210,6 +262,8 @@ export default {
   display: grid;
   grid-template-columns: 20% 20% 20% 20% 20%;
   grid-template-rows: 50% 50%;
+  overflow: auto;
+  font-family: 'Noto Serif', serif;
 }
 
 .maleImgDiv {
@@ -243,5 +297,7 @@ export default {
   grid-template-rows: 30% 30% 40%;
   align-items: center;
   text-align: center;
+  overflow: auto;
+  font-family: 'Noto Serif', serif;
 }
 </style>
