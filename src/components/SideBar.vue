@@ -98,7 +98,9 @@ export default {
     },
     logOut() {
       localStorage.removeItem('token')
-      localStorage.removeItem('user')
+      // localStorage.removeItem('user')
+      this.$store.dispatch('actUserInfo', {})
+      this.$router.push('/signin')
     },
     goAttendPage() {
       this.$router.push('/attend')
@@ -121,7 +123,7 @@ export default {
 
 <style lang="scss" scoped>
 .navbarUserInfoBox {
-  border: 1px solid black;
+  border: 3px solid white;
   border-radius: 30px;
   background-color: #aed581;
   opacity: 0.7;

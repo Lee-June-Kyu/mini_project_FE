@@ -44,7 +44,9 @@
 <script>
 import SideBar from '@/components/SideBar.vue'
 import axios from 'axios'
+
 import LookupStudentModal from '@/components/Modal/LookupStudentModal.vue'
+
 
 export default {
   name: 'AttendanceChcek',
@@ -206,6 +208,7 @@ export default {
   }
 }
 </script>
+
 <style>
 .firstDiv {
   width: 100%;
