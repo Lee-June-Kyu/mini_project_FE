@@ -95,11 +95,13 @@ export default {
             )
             .then(_response => {
               // localStorage.setItem('user', JSON.stringify(_response.data.data))
+              console.log('_response.data.data : ', _response.data.data)
               this.$store.dispatch('actUserInfo', _response.data.data)
               this.$router.push('/')
+              console.log('this.$store.getters.User : ', this.$store.getters.User)
             })
             .catch(_error => {
-              console.log('/login/me - _error : ', _error)
+              console.log('/auth/login/me - _error : ', _error)
 
               // 에러문구 표시
               this.$refs.signInForm.setErrors({
