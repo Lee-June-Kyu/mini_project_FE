@@ -18,9 +18,18 @@
         </div>
       </div>
       <div class="checkPageContent">
+        <div class="timeDivP parent">
+          <div id="time"></div>
+        </div>
         <div class="checkBox">
           <div class="maleImgDiv">
-            <div class="nameBox"><span>이상훈</span></div>
+            <div class="nameBox">
+              <span style="grid-row: 1">이상훈</span>
+              <span id="timeNow" style="grid-row: 2">OO 00:00:00</span>
+              <div>
+                <v-btn @click="displayDate()">출석하기</v-btn>
+              </div>
+            </div>
           </div>
           <!-- <div class="femaleImgDiv"></div> -->
         </div>
@@ -45,6 +54,9 @@ export default {
 
     inputStatus: false
   }),
+  mounted() {
+    this.setTimef()
+  },
 
   methods: {
     //전체화면 open
@@ -106,6 +118,44 @@ export default {
             return this.openFullScreen()
           }
         })
+    },
+    //시계 함수 테그 id가 time인곳에 나타나게함
+    //로컬 시간을 가져온 방법
+    setTimef() {
+      {
+        const now = new Date()
+        document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
+      }
+      setInterval(this.setTimef, 1000) // 0.5초마다 함수 실행되도록 설정
+    },
+    //출석시간을 체크하기위한 함수
+    //Date안 요소들을 가져와서 설정해준 방법
+    displayDate() {
+      const now = new Date()
+      let hours = now.getHours()
+      let minutes = now.getMinutes()
+      let seconds = now.getSeconds()
+      let ampm = ''
+      console.log(hours)
+      if (hours > 12) {
+        hours -= 12
+        ampm = '오후'
+      } else if (hours == 12) {
+        hours = 12
+        ampm = '오후'
+      } else {
+        ampm = '오전'
+      }
+      if (hours < 10) {
+        hours = '0' + hours
+      }
+      if (minutes < 10) {
+        minutes = '0' + minutes
+      }
+      if (seconds < 10) {
+        seconds = '0' + seconds
+      }
+      document.getElementById('timeNow').innerHTML = ampm + hours + ':' + minutes + ':' + seconds
     }
   }
 }
@@ -136,19 +186,27 @@ export default {
 .checkPageContent {
   width: 90%;
   height: 100%;
-  padding: 7%;
+  padding: 0% 7% 0% 7%;
   margin: auto;
   background: url('../assets/images/background.png') no-repeat;
   background-size: 100% 140%;
+}
+
+.timeDivP {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 15%;
+  padding-bottom: 4%;
 }
 
 .checkBox {
   display: flex;
   justify-content: flex-start;
   align-content: flex-start;
-  margin-top: 10%;
   width: 100%;
-  height: 70%;
+  height: 65%;
   display: grid;
   grid-template-columns: 20% 20% 20% 20% 20%;
   grid-template-rows: 50% 50%;
@@ -181,5 +239,9 @@ export default {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
   z-index: 0;
+  display: grid;
+  grid-template-rows: 30% 30% 40%;
+  align-items: center;
+  text-align: center;
 }
 </style>
