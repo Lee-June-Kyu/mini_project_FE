@@ -4,7 +4,7 @@
     <div class="schedulePageHeader">
       <h1>시간표 관리</h1>
       <div class="schedulePlusBtnBox">
-        <v-btn class="schedulePlusBtn">시간표 추가</v-btn>
+        <v-btn class="schedulePlusBtn" @click="openCreateScheduleModal">시간표 추가</v-btn>
       </div>
     </div>
     <v-app id="inspire">
@@ -48,19 +48,23 @@
           ></v-calendar>
         </v-sheet>
       </div>
+      <CreateScheduleModal :open-dialog="statusModal" @closeDialog="closeCreateScheduleModal"></CreateScheduleModal>
     </v-app>
   </div>
 </template>
 
 <script>
 import SideBar from '@/components/SideBar.vue'
+import CreateScheduleModal from '@/components/Modal/CreateScheduleModal.vue'
 export default {
   name: 'ScheduleView',
 
   components: {
+    CreateScheduleModal,
     SideBar
   },
   data: () => ({
+    statusModal: false,
     type: 'day',
     types: ['month', 'week', 'day'],
     weekday: [0, 1, 2, 3, 4, 5, 6],
@@ -110,6 +114,12 @@ export default {
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
+    },
+    openCreateScheduleModal() {
+      this.statusModal = true
+    },
+    closeCreateScheduleModal() {
+      this.statusModal = false
     }
   }
 }

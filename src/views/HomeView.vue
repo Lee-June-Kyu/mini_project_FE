@@ -93,7 +93,7 @@ export default {
   width: 80%;
   height: 85vh;
   box-sizing: border-box;
-
+  word-break: break-all;
   /* border: 1px solid black; */
 }
 .contentArea {
