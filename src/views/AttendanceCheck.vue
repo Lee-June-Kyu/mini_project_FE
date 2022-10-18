@@ -21,11 +21,17 @@
         <div class="timeDivP parent">
           <div id="time"></div>
         </div>
+        <v-tabs v-model="vmodelTime">
+          <!-- vmodelTime은 배열인 상태(key값이 배열로 들어가는듯?) -->
+          <v-tab v-for="index in checkTimes" :key="index">
+            {{ index }}
+          </v-tab>
+        </v-tabs>
         <div class="checkBox">
-          <div v-for="student in students" :key="student.index" class="maleImgDiv">
+          <div v-for="student in computedStudents" :key="student.index" class="maleImgDiv">
             <div class="nameBox">
-              <v-btn text style="font-size: 1.5em" @click="openStudentStatus(student)">{{ student.name }}</v-btn>
-              <span>{{ student.checkTime }}</span>
+              <v-btn text style="font-size: 1.5em" @click="openStudentStatus(student)">{{ student.stuName }}</v-btn>
+              <span>{{ student.attendTime }}</span>
               <v-btn text @click="displayDate(student)">출석하기</v-btn>
             </div>
           </div>
@@ -47,7 +53,6 @@ import axios from 'axios'
 
 import LookupStudentModal from '@/components/Modal/LookupStudentModal.vue'
 
-
 export default {
   name: 'AttendanceChcek',
 
@@ -58,39 +63,28 @@ export default {
 
   data: () => ({
     userPassword: Boolean,
-
+    today: '',
+    //전체화면 상태
     inputStatus: false,
+    //모달 상태
     statusLookupModal: false,
+    //모달 전달값
     itemObj: {},
-
-    students: [
-      {
-        name: '이준규',
-        schoolName: '준규초',
-        grade: 1,
-        phoneNumber: '010-1234-1234',
-        checkTime: '출석전'
-      },
-      {
-        name: '원영준',
-        schoolName: '준규초',
-        grade: 2,
-        phoneNumber: '010-1234-1234',
-        checkTime: '출석전'
-      },
-      {
-        name: '이상훈',
-        schoolName: '준규초',
-        grade: 1,
-        phoneNumber: '010-1234-1234',
-        checkTime: '출석전'
-      }
-    ]
+    vmodelTime: null,
+    //출석부 전체 가져오기
+    students: [],
+    //출석부 존재하는 시간 필터해서 넣기
+    checkTimes: []
   }),
 
   computed: {
     checkStudents() {
       return this.student
+    },
+    //데이타에 students를 필터해서 student라는 배열을 새로 만들어줌 [checkTimes배열중 this.time번째랑 같으면]
+    computedStudents() {
+      console.log(this.vmodelTime)
+      return this.students.filter(student => student.lessonDate === this.checkTimes[this.vmodelTime])
     }
   },
   mounted() {
@@ -98,8 +92,13 @@ export default {
     //로컬 시간을 가져온 방법
     this.timerInterval = setInterval(() => {
       const now = new Date()
+      let years = now.getFullYear()
+      let months = now.getMonth() + 1
+      let dates = now.getDate()
+      this.today = `${years}/${months}/${dates}`
       document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
     }, 1000) // 1초마다 함수 실행되도록 설정
+    this.getCheckList()
   },
   destroyed() {
     //setInterval(계속 반복된 함수를 지워주는 함수)
@@ -169,13 +168,12 @@ export default {
     },
     //출석시간을 체크하기위한 함수
     //Date안 요소들을 가져와서 설정해준 방법
-    displayDate(student) {
+    async displayDate(student) {
       const now = new Date()
       let hours = now.getHours()
       let minutes = now.getMinutes()
       let seconds = now.getSeconds()
       let ampm = ''
-      console.log(hours)
       if (hours > 12) {
         hours -= 12
         ampm = '오후'
@@ -194,7 +192,26 @@ export default {
       if (seconds < 10) {
         seconds = '0' + seconds
       }
-      student.checkTime = ampm + hours + ':' + minutes + ':' + seconds
+      student.attendTime = ampm + hours + ':' + minutes + ':' + seconds
+      console.log(student.id)
+      const userId = this.$store.getters.User.id
+      await axios
+        .patch(
+          process.env.VUE_APP_URL + `/schedule/${userId}/today/${student.id}`,
+          { attendTime: student.attendTime },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+        .then(async response => {
+          console.log('학생 정보 조회 response : ', response)
+          this.closeModal()
+        })
+        .catch(error => {
+          console.log('학생 정보 조회 error : ', error)
+        })
     },
     openStudentStatus(items) {
       this.itemObj = items
@@ -204,6 +221,52 @@ export default {
     closeStudentStatus() {
       console.log('모달닫기', this.statusLookupModal)
       this.statusLookupModal = false
+    },
+    //출석부 가져오기
+    async getCheckList() {
+      const userId = this.$store.getters.User.id
+      await axios
+        .post(
+          process.env.VUE_APP_URL + `/schedule/${userId}/today`,
+          { lessonDate: this.today },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+        .then(async response => {
+          console.log('오늘 출석명단 조회 response : ', response)
+          this.students = response.data.data
+
+          let arr1 = []
+          let arr2 = []
+          for (let i = 0; i < this.students.length; i++) {
+            if (arr1.includes(this.students[i].lessonDate)) {
+              // console.log('<= 중복된 array갯수')
+              continue
+            } else {
+              arr1.push(this.students[i].lessonDate)
+            }
+          }
+          // console.log('arr1 중복 제거된 배열 :', arr1)
+          const now = new Date()
+          let years = now.getFullYear()
+          let months = now.getMonth() + 1
+          let dates = now.getDate()
+          this.today = `${years}/${months}/${dates}`
+          // console.log('오늘 날짜 :', this.today)
+          for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i].split('/')[2] == this.today.split('/')[2]) {
+              arr2.push(arr1[i])
+            }
+          }
+          // console.log('arr2 중복제거 후 오늘날자만 filter:', arr2)
+          this.checkTimes = arr2
+        })
+        .catch(error => {
+          console.log('학생 정보 조회 error : ', error)
+        })
     }
   }
 }
@@ -248,12 +311,29 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 13%;
-  margin-bottom: 4%;
+  height: 10%;
   font-family: 'Noto Serif', serif;
   font-size: 3em;
   width: 100%;
   overflow: hidden;
+}
+
+.tableStyle {
+  width: 100%;
+  margin: 10px auto;
+  margin-top: 0px;
+  /* border: 1px solid #000; */
+  /* border-collapse: collapse; */
+  table-layout: fixed;
+}
+
+.tableStyle v-btn {
+  border: 1px solid #000;
+  border-radius: 10px;
+  background-color: rgb(197, 149, 6);
+  color: white;
+  font-size: 18px;
+  padding: 5px 0px;
 }
 
 .checkBox {
