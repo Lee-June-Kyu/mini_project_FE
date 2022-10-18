@@ -19,7 +19,7 @@
             </v-list-item-title>
             <div class="navbarUserBtnBox">
               <v-btn plain class="mypageBtn" x-small @click="goMyPage">마이페이지</v-btn>
-              <v-btn plain class="signoutBtn" x-small @click="logOut">로그아웃</v-btn>
+              <v-btn plain class="signoutBtn" x-small to="/signin" @click="logOut">로그아웃</v-btn>
             </div>
           </div>
         </v-list-item>
