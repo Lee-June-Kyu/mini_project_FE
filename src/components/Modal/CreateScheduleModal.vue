@@ -79,9 +79,9 @@ export default {
     return {
       date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       menu: false,
-      items: ['1시', '2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시', '10시'],
-      students: ['이준규', '우나은', '이상훈', '남경화', '원영준', '박태환'],
-      studentsValue: [[]]
+      items: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시', '10시'],
+      students: [],
+      studentsValue: [[], [], [], [], [], [], [], [], []]
     }
   },
   computed: {
@@ -89,13 +89,72 @@ export default {
       return props.openDialog
     }
   },
+  mounted() {
+    this.initData()
+    this.getStudents()
+  },
   methods: {
+    initData() {
+      this.studentsValue = [[], [], [], [], [], [], [], [], []]
+    },
     closeModal() {
       this.$emit('closeDialog')
     },
     async createSchedule() {
       console.log(this.date)
+      let tempDate = this.date.replace(/-/g, '/')
       console.log(this.studentsValue)
+      const userId = this.$store.getters.User.id
+      let axiosBody = { daySchedule: [] }
+      console.log(...this.studentsValue[0])
+      for (let i = 0; i < 9; i++) {
+        let tempStudents = ''
+        // for (let j = 0; j < this.studentsValue[i].length; j++) {
+        //   console.log(tempStudents)
+        //   tempStudents += this.studentsValue[j]
+        //   console.log(tempStudents)
+        // }
+        tempStudents += this.studentsValue[i]
+        if (tempStudents == '') {
+          continue
+        }
+        axiosBody.daySchedule.push({ lessonDate: tempDate + `/${i + 14}:00`, stuList: tempStudents })
+        tempStudents = ''
+      }
+      console.log('스케줄 생성 axiosbody:', axiosBody)
+      await axios
+        .post(process.env.VUE_APP_URL + `/schedule/${userId}`, axiosBody, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async response => {
+          console.log('스케줄 추가 response : ', response)
+          this.initData()
+          this.closeModal()
+        })
+        .catch(error => {
+          console.log('스케줄 추가 error : ', error)
+        })
+    },
+    async getStudents() {
+      const userId = this.$store.getters.User.id
+      await axios
+        .get(process.env.VUE_APP_URL + `/students/${userId}/info/all`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(async response => {
+          console.log('학생 정보 조회 response : ', response)
+          let resStudents = response.data.data
+          for (let i = 0; i < resStudents.length; i++) {
+            this.students.push(resStudents[i].stuName)
+          }
+        })
+        .catch(error => {
+          console.log('학생 정보 조회 error : ', error)
+        })
     }
   }
 }

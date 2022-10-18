@@ -45,6 +45,7 @@
             interval-height="80"
             interval-count="10"
             @change="getEvents"
+            @click="console.log('1')"
           ></v-calendar>
         </v-sheet>
       </div>
@@ -56,6 +57,7 @@
 <script>
 import SideBar from '@/components/SideBar.vue'
 import CreateScheduleModal from '@/components/Modal/CreateScheduleModal.vue'
+import axios from 'axios'
 export default {
   name: 'ScheduleView',
 
@@ -78,36 +80,36 @@ export default {
     value: '',
     events: [],
     colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-    names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party']
+    // names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party']
+    allSchedule: [],
+    tempSchedule: {}
   }),
+  mounted() {
+    this.getSchedules()
+  },
   methods: {
     getEvents({ start, end }) {
       const events = []
-
-      const min = new Date(`${start.date}T13:00:00`)
-      const max = new Date(`${end.date}T21:59:59`)
-      const days = (max.getTime() - min.getTime()) / 86400000
-      const eventCount = this.rnd(days, days + 20)
-
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-        const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-        const second = new Date(first.getTime() + secondTimestamp)
-
+      for (let [key, value] of Object.entries(this.tempSchedule)) {
+        let startDate = new Date(key)
+        let endDate = new Date(startDate.getTime())
+        endDate.setHours(endDate.getHours() + 1)
+        console.log(startDate)
+        console.log(endDate)
+        let students = value.split(',').slice(1).join(' ')
+        console.log(students)
         events.push({
           // 이름 시작시간, 끝나는시간 , 색상
           // 이름은 스트링으로 길게 넣어야 할 듯함 !
-          name: this.names[this.rnd(0, this.names.length - 1)],
-          start: first,
-          end: second,
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay
-        })
-      }
 
-      this.events = events
+          name: students,
+          start: startDate,
+          end: endDate,
+          color: this.colors[this.rnd(0, this.colors.length - 1)],
+          timed: 2
+        })
+        this.events = events
+      }
     },
     getEventColor(event) {
       return event.color
@@ -119,7 +121,52 @@ export default {
       this.statusModal = true
     },
     closeCreateScheduleModal() {
+      this.evnets = []
+      this.tempSchedule = []
+      this.getSchedules()
       this.statusModal = false
+    },
+    async getSchedules() {
+      const userId = this.$store.getters.User.id
+      await axios
+        .get(process.env.VUE_APP_URL + `/schedule/${userId}/all`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(response => {
+          console.log('유저 스케줄 조회 response : ', response)
+          this.allSchedule = response.data.data
+          console.log('올 스케줄 : ', this.allSchedule)
+
+          for (let i = 0; i < this.allSchedule.length; i++) {
+            this.tempSchedule[`${this.allSchedule[i].lessonDate}`] += ',' + this.allSchedule[i].stuName
+          }
+
+          const events = []
+          for (let [key, value] of Object.entries(this.tempSchedule)) {
+            let startDate = new Date(key)
+            let endDate = new Date(startDate.getTime())
+            endDate.setHours(endDate.getHours() + 1)
+
+            let students = value.split(',').slice(1).join(' ')
+
+            events.push({
+              // 이름 시작시간, 끝나는시간 , 색상
+              // 이름은 스트링으로 길게 넣어야 할 듯함 !
+
+              name: students,
+              start: startDate,
+              end: endDate,
+              color: this.colors[this.rnd(0, this.colors.length - 1)],
+              timed: 2
+            })
+            this.events = events
+          }
+        })
+        .catch(error => {
+          console.log('유저 스케줄 조회 error : ', error)
+        })
     }
   }
 }

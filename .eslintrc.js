@@ -10,7 +10,8 @@ module.exports = {
     'plugin:prettier/recommended'
   ],
   parserOptions: {
-    parser: '@babel/eslint-parser'
+    parser: '@babel/eslint-parser',
+    experimentalObjectRestSpread: true
   },
   rules: {
     'prettier/prettier': [

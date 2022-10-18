@@ -45,8 +45,19 @@ export default {
       return props.openDialog
     }
   },
+  mounted() {
+    this.initValue()
+  },
   methods: {
+    initValue() {
+      this.bodyObj.stuName = ''
+      this.bodyObj.stuGrade = ''
+      this.bodyObj.school = ''
+      this.bodyObj.phoneNum = ''
+      this.bodyObj.etc = ''
+    },
     closeModal() {
+      this.initValue()
       this.$emit('closeDialog')
     },
     async createStudent() {
