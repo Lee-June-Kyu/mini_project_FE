@@ -10,23 +10,34 @@
             전체화면 닫기<v-icon>mdi-fullscreen-exit</v-icon>
           </button>
         </div>
-        <div style="display: flex; justify-content: flex-end">
-          <div style="width: 220px">
-            <h3 class="denger">경고!</h3>
-            <h5 class="denger">출석 버튼 외에 조작은 하지마세요!</h5>
+        <div>
+          <div class="itemBox">
+            <div>
+              <button style="display: flex; align-items: flex-end" @click="openNotePadStatus">
+                <v-icon size="5vh">mdi-plus-circle-outline</v-icon>코멘트 추가하기
+              </button>
+            </div>
+            <div style="width: 20vh">
+              <h3 class="denger">경고!</h3>
+              <h5 class="denger">학생은 출석 버튼 외에 조작은 하지마세요!</h5>
+            </div>
           </div>
         </div>
       </div>
+
       <div class="checkPageContent">
         <div class="timeDivP parent">
           <div id="time"></div>
         </div>
-        <v-tabs v-model="vmodelTime">
-          <!-- vmodelTime은 배열인 상태(key값이 배열로 들어가는듯?) -->
-          <v-tab v-for="index in checkTimes" :key="index">
-            {{ index }}
-          </v-tab>
-        </v-tabs>
+        <div>
+          <div class="tabsDiv">
+            <div v-for="(targetTime, i) in haveTime" :key="i">
+              <button class="tabBtn" @click="onClickTab(i)">
+                {{ targetTime }}
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="checkBox">
           <div v-for="student in computedStudents" :key="student.index" class="maleImgDiv">
             <div class="nameBox">
@@ -44,6 +55,7 @@
       :item-object="itemObj"
       @closeDialog="closeStudentStatus"
     ></LookupStudentModal>
+    <NotepadModal :open-dialog="statusNotePadModal" @closeDialog="closeNotePadStatus"></NotepadModal>
   </div>
 </template>
 
@@ -52,13 +64,15 @@ import SideBar from '@/components/SideBar.vue'
 import axios from 'axios'
 
 import LookupStudentModal from '@/components/Modal/LookupStudentModal.vue'
+import NotepadModal from '@/components/Modal/NotepadModal.vue'
 
 export default {
   name: 'AttendanceChcek',
 
   components: {
     SideBar,
-    LookupStudentModal
+    LookupStudentModal,
+    NotepadModal
   },
 
   data: () => ({
@@ -68,13 +82,16 @@ export default {
     inputStatus: false,
     //모달 상태
     statusLookupModal: false,
+    statusNotePadModal: false,
     //모달 전달값
     itemObj: {},
     vmodelTime: null,
     //출석부 전체 가져오기
     students: [],
+    //전체학생가져오기
     //출석부 존재하는 시간 필터해서 넣기
-    checkTimes: []
+    checkTimes: [],
+    haveTime: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시']
   }),
 
   computed: {
@@ -83,8 +100,9 @@ export default {
     },
     //데이타에 students를 필터해서 student라는 배열을 새로 만들어줌 [checkTimes배열중 this.time번째랑 같으면]
     computedStudents() {
-      console.log(this.vmodelTime)
-      return this.students.filter(student => student.lessonDate === this.checkTimes[this.vmodelTime])
+      // console.log('클릭한 인덱스', this.vmodelTime)
+      // console.log('this.checkTime에 값 잘 들어왔는지?', this.checkTimes)
+      return this.checkTimes.filter(student => student.lessonDate.split('/')[3].split(':')[0] == this.vmodelTime + 14)
     }
   },
   mounted() {
@@ -166,6 +184,10 @@ export default {
           }
         })
     },
+    //스캐쥴 시간 탭 클릭
+    onClickTab(i) {
+      this.vmodelTime = i
+    },
     //출석시간을 체크하기위한 함수
     //Date안 요소들을 가져와서 설정해준 방법
     async displayDate(student) {
@@ -222,6 +244,14 @@ export default {
       console.log('모달닫기', this.statusLookupModal)
       this.statusLookupModal = false
     },
+    openNotePadStatus() {
+      this.statusNotePadModal = true
+      console.log('모달클릭', this.statusLookupModal)
+    },
+    closeNotePadStatus() {
+      console.log('모달닫기', this.statusLookupModal)
+      this.statusNotePadModal = false
+    },
     //출석부 가져오기
     async getCheckList() {
       const userId = this.$store.getters.User.id
@@ -241,15 +271,19 @@ export default {
 
           let arr1 = []
           let arr2 = []
+          let temp = []
+          //temp안에 중복값이 있으면(includes) true반환해서 continue(반복문 처음으로 돌아감), 동일 값이 없으면 false(else)를 타서 배열에 넣어줌
           for (let i = 0; i < this.students.length; i++) {
-            if (arr1.includes(this.students[i].lessonDate)) {
+            if (temp.includes(this.students[i].lessonDate)) {
               // console.log('<= 중복된 array갯수')
               continue
             } else {
-              arr1.push(this.students[i].lessonDate)
+              arr1.push(this.students[i])
+              temp.push(this.students[i].lessonDate)
             }
           }
-          // console.log('arr1 중복 제거된 배열 :', arr1)
+          console.log('arr1에 넣어준 학생 정보', arr1)
+          console.log('temp 중복 제거된 배열', temp)
           const now = new Date()
           let years = now.getFullYear()
           let months = now.getMonth() + 1
@@ -257,11 +291,11 @@ export default {
           this.today = `${years}/${months}/${dates}`
           // console.log('오늘 날짜 :', this.today)
           for (let i = 0; i < arr1.length; i++) {
-            if (arr1[i].split('/')[2] == this.today.split('/')[2]) {
+            if (arr1[i].lessonDate.split('/')[2] == this.today.split('/')[2]) {
               arr2.push(arr1[i])
             }
           }
-          // console.log('arr2 중복제거 후 오늘날자만 filter:', arr2)
+          // console.log('arr2= 중복제거 후 오늘 날자만 filter:', arr2)
           this.checkTimes = arr2
         })
         .catch(error => {
@@ -291,8 +325,14 @@ export default {
   flex-direction: column;
 }
 
+.itemBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
 .denger {
-  width: 15vh;
+  width: 16vh;
   color: red;
   overflow: hidden;
 }
@@ -300,10 +340,14 @@ export default {
 .checkPageContent {
   width: 90%;
   height: 100%;
-  padding: 0% 7% 0% 7%;
+  padding: 0% 3% 0% 3%;
   margin: auto;
   background: url('../assets/images/background.png') no-repeat;
   background-size: 100% 140%;
+  cursor: url('../assets/images/hover.png') 0 0, pointer;
+}
+.checkPageContent:hover {
+  /* cursor: url('') */
 }
 
 .timeDivP {
@@ -311,11 +355,29 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 10%;
+  height: auto;
   font-family: 'Noto Serif', serif;
-  font-size: 3em;
+  font-size: 2.5em;
   width: 100%;
   overflow: hidden;
+  padding: 3.5% 0% 0% 0%;
+}
+
+.tabsDiv {
+  display: grid;
+  grid-template-columns: 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
+  background: url('../assets/images/toolbarback.png') no-repeat;
+  background-size: 100%;
+  padding: 6% 1% 0% 1%;
+  height: auto;
+}
+.tabBtn {
+  width: 100%;
+  height: auto;
+  background: url('../assets/images/tabsback.png') no-repeat;
+  background-size: 100% 100%;
+  background-color: transparent;
+  background-color: bisque;
 }
 
 .tableStyle {
@@ -382,5 +444,33 @@ export default {
   text-align: center;
   overflow: auto;
   font-family: 'Noto Serif', serif;
+}
+
+button {
+  /* 생략 */
+  margin: 0;
+  padding: 0.5rem 1rem;
+
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+
+  display: inline-block;
+  width: auto;
+
+  border: none;
+  border-radius: 4px;
+}
+button.tabBtn:active,
+button.tabBtn:hover,
+button.tabBtn:focus {
+  background: url('../assets/images/tabsback.png') no-repeat;
+  background-size: 100% 100%;
+  background-color: transparent;
+  background-color: rgb(167, 139, 105);
+  outline: 1;
+  cursor: url('../assets/images/hover.png') 0 0, pointer;
 }
 </style>
