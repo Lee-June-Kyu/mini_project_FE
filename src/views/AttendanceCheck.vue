@@ -1,9 +1,11 @@
 <template>
   <div>
-    <side-bar></side-bar>
+    <side-bar v-if="sidebarStatue"></side-bar>
     <div class="firstDiv">
       <div class="checkPageHeader">
         <h1>출석체크</h1>
+        <v-btn @click="closeSideBar">사이드바 닫기</v-btn>
+        <v-btn @click="openSideBar">사이드바 열기</v-btn>
         <div class="fullscreenbtn">
           <button v-if="!inputStatus" @click="openFullScreen">전체화면 열기<v-icon>mdi-fullscreen</v-icon></button>
           <button v-if="inputStatus" @click="checkInputPassword">
@@ -25,6 +27,7 @@
           <!-- vmodelTime은 배열인 상태(key값이 배열로 들어가는듯?) -->
           <v-tab v-for="index in checkTimes" :key="index">
             {{ index }}
+            <!-- {{ tt(index) }} -->
           </v-tab>
         </v-tabs>
         <div class="checkBox">
@@ -74,7 +77,8 @@ export default {
     //출석부 전체 가져오기
     students: [],
     //출석부 존재하는 시간 필터해서 넣기
-    checkTimes: []
+    checkTimes: [],
+    sidebarStatue: true
   }),
 
   computed: {
@@ -86,6 +90,11 @@ export default {
       console.log(this.vmodelTime)
       return this.students.filter(student => student.lessonDate === this.checkTimes[this.vmodelTime])
     }
+    // tt(val) {
+    //   // val.split('/')[3].split(':')[0] - 12
+    //   console.log(val)
+    //   return '2'
+    // }
   },
   mounted() {
     //시계 함수 테그 id가 time인곳에 나타나게함
@@ -215,6 +224,12 @@ export default {
     },
     openStudentStatus(items) {
       this.itemObj = items
+      // this.itemObj.stuName = items.stuName
+      // this.itemObj.school = items.school
+      // this.itemObj.stuGrade = items.stuGrade
+      // this.itemObj.phoneNum = items.phoneNum
+      // this.itemObj.etc = items.etc
+
       this.statusLookupModal = true
       console.log('모달클릭', this.statusLookupModal)
     },
@@ -267,6 +282,12 @@ export default {
         .catch(error => {
           console.log('학생 정보 조회 error : ', error)
         })
+    },
+    closeSideBar() {
+      this.sidebarStatue = false
+    },
+    openSideBar() {
+      this.sidebarStatue = true
     }
   }
 }

@@ -1,8 +1,10 @@
 <template>
   <div>
-    <side-bar></side-bar>알림장
-    {{ userInfo }}
-    <v-btn @click="gogo">gogo</v-btn>
+    <side-bar></side-bar>
+    <div class="schedulePageHeader">
+      <h1>메모 히스토리</h1>
+    </div>
+    <div class="historyContentArea"></div>
   </div>
 </template>
 
@@ -15,28 +17,29 @@ export default {
     SideBar
   },
   data() {
-    return {
-      user: {
-        id: 1,
-        name: 'lee',
-        className: 'june'
-      },
-      ddd: {}
-    }
+    return {}
   },
-  computed: {
-    userInfo() {
-      return this.$store.getters.User
-    }
-  },
-  methods: {
-    gogo() {
-      this.$store.dispatch('actUserInfo', this.userInfo)
-      console.log(this.$store.getters.User)
-      this.ddd = this.$store.getters.User
-    }
-  }
+  computed: {},
+  methods: {}
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.schedulePageHeader {
+  margin: 70px 100px 30px 100px;
+  display: flex;
+  align-content: flex-end;
+  flex-direction: column;
+}
+.historyContentArea {
+  width: 70vw;
+  height: 78vh;
+  margin: auto;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 15px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+</style>

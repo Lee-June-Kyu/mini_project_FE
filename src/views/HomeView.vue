@@ -1,11 +1,11 @@
 <template>
   <div>
     <side-bar></side-bar>
-    <div class="homeTitle">
+    <!-- <div class="homeTitle">
       <h1>Home</h1>
-    </div>
+    </div> -->
     <div class="homeContentArea">
-      <v-divider></v-divider>
+      <!-- <v-divider></v-divider> -->
       <div class="contentArea">
         <section class="useSection">
           <div class="sectionTitle">
@@ -53,17 +53,17 @@
           <div class="statsSectionInner">
             <div class="innerSection subTitle">
               <div>수업 수</div>
-              <div>8</div>
+              <div>{{ lessonDates.length }}</div>
             </div>
             <v-divider vertical class="dividerVertical"></v-divider>
             <div class="innerSection subTitle">
               <div>출결 학생</div>
-              <div>50</div>
+              <div>{{ countStudent }}</div>
             </div>
             <v-divider vertical class="dividerVertical"></v-divider>
             <div class="innerSection subTitle">
               <div>출결한 학생 수</div>
-              <div>30</div>
+              <div>{{ countAttendance }}</div>
             </div>
           </div>
         </section>
@@ -74,12 +74,72 @@
 
 <script>
 import SideBar from '@/components/SideBar.vue'
+import axios from 'axios'
 
 export default {
   name: 'Home',
 
   components: {
     SideBar
+  },
+  data() {
+    return {
+      lessonDates: [],
+      countStudent: 0,
+      countAttendance: 0
+    }
+  },
+  mounted() {
+    this.getSchedules()
+  },
+  methods: {
+    async getSchedules() {
+      const userId = this.$store.getters.User.id
+      await axios
+        .get(process.env.VUE_APP_URL + `/schedule/${userId}/all`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(response => {
+          console.log('유저 스케줄 조회 response : ', response)
+          let allSchedule = response.data.data
+          console.log('올 스케줄 : ', allSchedule)
+          const now = new Date()
+          let years = '' + now.getFullYear()
+          let months = '' + (now.getMonth() + 1)
+          let dates = '' + now.getDate()
+          let today = `${years}/${months}/${dates}`
+
+          let todaySchedule = []
+
+          for (let i = 0; i < allSchedule.length; i++) {
+            if (
+              allSchedule[i].lessonDate.split('/')[0] == years &&
+              allSchedule[i].lessonDate.split('/')[1] == months &&
+              allSchedule[i].lessonDate.split('/')[2] == dates
+            ) {
+              todaySchedule.push(allSchedule[i])
+            }
+          }
+
+          console.log('totototo', todaySchedule)
+          for (let i = 0; i < todaySchedule.length; i++) {
+            if (todaySchedule[i].attendTime != '출석전') {
+              this.countAttendance++
+            }
+            if (this.lessonDates.includes(todaySchedule[i].lessonDate)) {
+              continue
+            } else {
+              this.lessonDates.push(todaySchedule[i].lessonDate)
+            }
+          }
+          this.countStudent = todaySchedule.length
+        })
+        .catch(error => {
+          console.log('유저 스케줄 조회 error : ', error)
+        })
+    }
   }
 }
 </script>
@@ -98,7 +158,7 @@ export default {
 }
 .contentArea {
   width: 100%;
-  height: 95%;
+  height: 95vh;
   background-color: #f1f8e9;
   border-radius: 10px;
   box-sizing: border-box;
@@ -114,21 +174,21 @@ export default {
   border-radius: 10px;
   border: 1px solid #9ccc65;
   box-sizing: border-box;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 .sectionTitle {
   background-color: #dcedc8;
-  padding: 30px;
+  padding: 20px;
   border-radius: 10px 10px 0 0;
 }
 .sectionMainTitle {
   display: block;
-  font-size: xx-large;
+  font-size: x-large;
   font-weight: bolder;
 }
 
 .sectionMainDescription {
-  font-size: large;
+  font-size: medium;
 }
 .useDetailSection {
   background-color: white;
@@ -183,7 +243,7 @@ export default {
 }
 .subTitle {
   display: block;
-  font-size: x-large;
+  font-size: large;
 }
 .subDescription {
   margin-left: 20px;
@@ -193,7 +253,7 @@ export default {
   background-color: white;
   border-radius: 10px;
   width: 100%;
-  height: 25%;
+  height: 20%;
   margin-top: 10px;
   display: flex;
   justify-content: space-around;

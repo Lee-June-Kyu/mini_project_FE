@@ -1,31 +1,68 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="1000">
     <v-card class="modal">
-      <div class="modalHeader">
-        <h2>학생 추가</h2>
+      <div class="modalHeader light-green lighten-3">
+        <h2 class="text-h5 white--text">학생 추가</h2>
         <v-btn icon text @click="closeModal">
-          <v-icon>mdi-close</v-icon>
+          <v-icon class="text-h5 white--text">mdi-close</v-icon>
         </v-btn>
       </div>
-
-      <form>
-        <v-text-field v-model="bodyObj.stuName" class="textField" label="학생 이름" outlined></v-text-field>
-        <v-text-field v-model="bodyObj.stuGrade" class="textField" label="학생 학년" outlined></v-text-field>
-        <v-text-field v-model="bodyObj.school" class="textField" label="학교 명" outlined></v-text-field>
-        <v-text-field v-model="bodyObj.phoneNum" class="textField" label="학부모 연락처" outlined></v-text-field>
-        <v-text-field v-model="bodyObj.etc" class="textField" label="기타메모" outlined></v-text-field>
-        <div class="modalBottom">
-          <div></div>
-          <v-btn @click="createStudent">추가하기</v-btn>
-        </div>
-      </form>
+      <ValidationObserver ref="signInForm" v-slot="{ handleSubmit, invalid, validate }">
+        <form @submit.prevent="handleSubmit(createStudent)">
+          <ValidationProvider v-slot="{ errors }" name="학생 이름" rules="required">
+            <v-text-field
+              v-model="bodyObj.stuName"
+              class="textField"
+              label="학생 이름"
+              outlined
+              maxlength="3"
+              :error-messages="errors"
+            ></v-text-field>
+          </ValidationProvider>
+          <ValidationProvider v-slot="{ errors }" name="학년" rules="required|numeric">
+            <v-text-field
+              v-model="bodyObj.stuGrade"
+              class="textField"
+              label="학생 학년"
+              outlined
+              maxlength="1"
+              :error-messages="errors"
+            ></v-text-field>
+          </ValidationProvider>
+          <ValidationProvider v-slot="{ errors }" name="학교 이름" rules="required">
+            <v-text-field
+              v-model="bodyObj.school"
+              class="textField"
+              label="학교 명"
+              outlined
+              :error-messages="errors"
+            ></v-text-field>
+          </ValidationProvider>
+          <ValidationProvider v-slot="{ errors }" name="학부모 연락처" rules="required|numeric">
+            <v-text-field
+              v-model="bodyObj.phoneNum"
+              :error-messages="errors"
+              class="textField"
+              label="학부모 연락처"
+              outlined
+            ></v-text-field>
+          </ValidationProvider>
+          <v-text-field v-model="bodyObj.etc" class="textField" label="기타메모" outlined></v-text-field>
+          <div class="modalBottom">
+            <div></div>
+            <v-btn type="submit" :disabled="invalid || !validate">추가하기</v-btn>
+          </div>
+        </form>
+      </ValidationObserver>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
 import axios from 'axios'
+import Validate from '@/mixins/Validate.vue'
 export default {
+  mixins: [Validate],
   props: {
     openDialog: Boolean
   },
@@ -87,8 +124,11 @@ export default {
 
 .modalHeader {
   display: flex;
-  margin: 0px 40px 40px 40px;
+  margin: 0px 0px 20px 0px;
   padding-top: 40px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 20px;
   justify-content: space-between;
 }
 

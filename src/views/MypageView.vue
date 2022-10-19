@@ -4,18 +4,60 @@
     <div class="container">
       <h1>회원 정보</h1>
       <div class="innerContainer">
-        <span class="redStar">* </span><span>이름</span>
-        <v-text-field v-model="name" dense outlined color="light-green lighten-4"></v-text-field>
-        <span class="redStar">* </span><span>학원 이름</span>
-        <v-text-field v-model="className" dense outlined color="light-green lighten-4"></v-text-field>
-        <span class="redStar">* </span><span>연락처</span>
-        <v-text-field v-model="phoneNum" outlined dense color="light-green lighten-4"></v-text-field>
-        <span class="redStar">* </span><span>비밀번호</span>
-        <v-text-field v-model="password" outlined dense color="light-green lighten-4" type="password"></v-text-field>
-        <div class="btnArea">
-          <v-btn color="error" class="myPageBtn" large @click="deleteUser">탈퇴</v-btn>
-          <v-btn color="primary" class="myPageBtn" large @click="updateInfo">저장</v-btn>
-        </div>
+        <ValidationObserver ref="signInForm" v-slot="{ handleSubmit, invalid, validate }">
+          <form @submit.prevent="handleSubmit(updateInfo)">
+            <span class="redStar">* </span>
+            <span>성함</span>
+
+            <ValidationProvider v-slot="{ errors }" name="선생님 성함" rules="required">
+              <v-text-field
+                v-model="name"
+                maxlength="3"
+                dense
+                outlined
+                color="light-green lighten-4"
+                :error-messages="errors"
+              ></v-text-field>
+            </ValidationProvider>
+            <span class="redStar">* </span><span>학원 이름</span>
+            <ValidationProvider v-slot="{ errors }" name="클래스 이름" rules="required">
+              <v-text-field
+                v-model="className"
+                dense
+                outlined
+                color="light-green lighten-4"
+                :error-messages="errors"
+              ></v-text-field>
+            </ValidationProvider>
+            <span class="redStar">* </span><span>연락처</span>
+            <ValidationProvider v-slot="{ errors }" name="선생님 연락처" rules="required|numeric">
+              <v-text-field
+                v-model="phoneNum"
+                outlined
+                dense
+                color="light-green lighten-4"
+                :error-messages="errors"
+                maxlength="11"
+              ></v-text-field>
+            </ValidationProvider>
+            <span class="redStar">* </span><span>비밀번호</span>
+            <ValidationProvider v-slot="{ errors }" name="비밀번호" rules="required|min:6">
+              <v-text-field
+                v-model="password"
+                outlined
+                dense
+                color="light-green lighten-4"
+                type="password"
+                :error-messages="errors"
+              ></v-text-field>
+            </ValidationProvider>
+            <div class="btnArea">
+              <v-btn color="error" class="myPageBtn" large @click="deleteUser">탈퇴</v-btn>
+              <!-- <v-btn color="primary" class="myPageBtn" large @click="updateInfo">저장</v-btn> -->
+              <v-btn color="primary" class="myPageBtn" large type="submit" :disabled="invalid || !validate">저장</v-btn>
+            </div>
+          </form>
+        </ValidationObserver>
       </div>
     </div>
     <DeleteUserModal :open-dialog="statusModal" :user-id="uId" @closeDialog="closeModal"></DeleteUserModal>
@@ -26,14 +68,15 @@
 import SideBar from '@/components/SideBar.vue'
 import DeleteUserModal from '@/components/Modal/DeleteUserModal.vue'
 import axios from 'axios'
+import Validate from '@/mixins/Validate.vue'
 
 export default {
   name: 'Mypage',
-
   components: {
     SideBar,
     DeleteUserModal
   },
+  mixins: [Validate],
 
   data() {
     return {
@@ -85,6 +128,7 @@ export default {
           user.name = axiosBody.name
           user.className = axiosBody.className
           this.$store.dispatch('actUserInfo', user)
+          this.$router.push('/')
           // localStorage.setItem('user', JSON.stringify(user))
         })
         .catch(error => {
