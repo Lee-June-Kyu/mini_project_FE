@@ -7,50 +7,49 @@
         <v-btn class="schedulePlusBtn" @click="openCreateScheduleModal">시간표 추가</v-btn>
       </div>
     </div>
-    <v-app id="inspire">
-      <div class="contentBox">
-        <v-sheet tile height="54" class="d-flex">
-          <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>
-          <v-select v-model="type" :items="types" dense outlined hide-details class="ma-2" label="일/주/월"></v-select>
-          <v-spacer> </v-spacer>
-          <div class="ma-2">Wanni Schedule</div>
-          <v-spacer> </v-spacer>
-          <v-select
-            v-model="weekday"
-            :items="weekdays"
-            dense
-            outlined
-            hide-details
-            label="일주일단위"
-            class="ma-2"
-          ></v-select>
 
-          <v-btn icon class="ma-2" @click="$refs.calendar.next()">
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn>
-        </v-sheet>
-        <v-sheet height="600">
-          <v-calendar
-            ref="calendar"
-            v-model="value"
-            :weekdays="weekday"
-            :type="type"
-            :events="events"
-            event-overlap-mode="column"
-            :event-overlap-threshold="30"
-            :event-color="getEventColor"
-            first-interval="13"
-            interval-height="80"
-            interval-count="10"
-            @change="getEvents"
-            @click="console.log('1')"
-          ></v-calendar>
-        </v-sheet>
-      </div>
-      <CreateScheduleModal :open-dialog="statusModal" @closeDialog="closeCreateScheduleModal"></CreateScheduleModal>
-    </v-app>
+    <div class="contentBox">
+      <v-sheet tile height="54" class="d-flex">
+        <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+        <v-select v-model="type" :items="types" dense outlined hide-details class="ma-2" label="일/주/월"></v-select>
+        <v-spacer> </v-spacer>
+        <div class="ma-2 titleSchedule">Wanni Schedule</div>
+        <v-spacer> </v-spacer>
+        <v-select
+          v-model="weekday"
+          :items="weekdays"
+          dense
+          outlined
+          hide-details
+          label="일주일단위"
+          class="ma-2"
+        ></v-select>
+
+        <v-btn icon class="ma-2" @click="$refs.calendar.next()">
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </v-sheet>
+      <v-sheet height="600">
+        <v-calendar
+          ref="calendar"
+          v-model="value"
+          :weekdays="weekday"
+          :type="type"
+          :events="events"
+          event-overlap-mode="column"
+          :event-overlap-threshold="30"
+          :event-color="getEventColor"
+          first-interval="13"
+          interval-height="80"
+          interval-count="10"
+          @change="getEvents"
+          @click="console.log('1')"
+        ></v-calendar>
+      </v-sheet>
+    </div>
+    <CreateScheduleModal :open-dialog="statusModal" @closeDialog="closeCreateScheduleModal"></CreateScheduleModal>
   </div>
 </template>
 
@@ -183,7 +182,7 @@ export default {
 }
 
 .schedulePageHeader {
-  margin: 70px 100px 30px 100px;
+  margin: 30px 100px 30px 100px;
   display: flex;
   align-content: flex-end;
   flex-direction: column;
@@ -195,5 +194,9 @@ export default {
 
 .schedulePlusBtn {
   width: 100px;
+}
+
+.titleSchedule {
+  font-size: 25px;
 }
 </style>

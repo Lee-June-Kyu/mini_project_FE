@@ -10,11 +10,9 @@
           <div class="navbarUserInfoBox">
             <v-list-item-title>
               <br />
-              <span class="navBarUserInfoTitle">안녕하세요 {{ userInfo.name }}</span>
+              <div class="navBarUserInfoTitle">안녕하세요 {{ userInfo.name }}님</div>
               <br />
-              <span class="navBarUserInfoComment"> Wanni 입니다.</span>
-              <br />
-              <br />
+              <div class="navBarUserInfoComment">Wanni 입니다</div>
               <br />
             </v-list-item-title>
             <div class="navbarUserBtnBox">
@@ -138,15 +136,16 @@ export default {
 }
 
 .navBarUserInfoTitle {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bolder;
-  margin: 30px;
+  margin-left: 20px;
+  // padding-bottom: 10px;
 }
 
 .navBarUserInfoComment {
   font-weight: bolder;
-  font-size: 15px;
-  margin: 30px;
+  font-size: 20px;
+  margin-left: 40px;
 }
 
 .mypageBtn,

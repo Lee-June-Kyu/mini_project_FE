@@ -3,15 +3,16 @@
     <side-bar></side-bar>
     <div>
       <div class="studentPageHeader">
-        <h1>학생 관리</h1>
-        <div class="studentPlusBtnBox">
-          <v-btn class="studentPlusBtn" @click="openCreateStudentModal">학생 추가</v-btn>
-        </div>
+        <h1 class="aaa">학생 리스트</h1>
+        <v-btn class="studentPlusBtn" @click="openCreateStudentModal">학생 추가</v-btn>
+        <!-- <div class="studentPlusBtnBox">
+          
+        </div> -->
       </div>
       <div class="studentPageContent">
         <v-card>
           <v-card-title>
-            학생 리스트
+            <div></div>
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -25,22 +26,22 @@
             <template>
               <thead>
                 <tr>
-                  <th class="text-left">이름</th>
-                  <th class="text-left">학교</th>
-                  <th class="text-left">학년</th>
-                  <th class="text-left">학부모 연락처</th>
-                  <th>삭제</th>
+                  <th class="text-center">이름</th>
+                  <th class="text-center">학교</th>
+                  <th class="text-center">학년</th>
+                  <th class="text-center">학부모 연락처</th>
+                  <th class="text-center">삭제</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in filterStudents" :key="item.id" @click="openLookupStudentModal(item)">
-                  <td>{{ item.stuName }}</td>
-                  <td>
+                <tr v-for="item in filterStudents" :key="item.id" class="bbb" @click="openLookupStudentModal(item)">
+                  <td class="text-center">{{ item.stuName }}</td>
+                  <td class="text-center">
                     {{ item.school }}
                   </td>
-                  <td>{{ item.stuGrade }}</td>
-                  <td>{{ item.phoneNum }}</td>
-                  <td><v-btn @click.stop="deleteStudent(item.id)">삭제</v-btn></td>
+                  <td class="text-center">{{ item.stuGrade }}</td>
+                  <td class="text-center">{{ item.phoneNum }}</td>
+                  <td class="text-center"><v-btn @click.stop="deleteStudent(item.id)">삭제</v-btn></td>
                 </tr>
               </tbody>
             </template>
@@ -171,17 +172,20 @@ export default {
 
 <style lang="scss" scoped>
 .studentPageContent {
+  margin-top: 0;
   width: 90%;
-  padding: 5%;
+  padding: 0 5%;
   padding-bottom: 0px;
   padding-top: 10px;
   margin: auto;
 }
 .studentPageHeader {
-  margin: 70px 100px 30px 100px;
+  margin: 50px 8vw 30px 8vw;
   display: flex;
   align-content: flex-end;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  // flex-direction: column;
 }
 
 .studentPlusBtnBox {
@@ -190,5 +194,11 @@ export default {
 
 .studentPlusBtn {
   width: 100px;
+}
+.aaa {
+  display: inline;
+}
+.v-text-field {
+  width: 30px;
 }
 </style>
