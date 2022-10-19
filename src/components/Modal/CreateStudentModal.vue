@@ -1,10 +1,10 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="1000">
     <v-card class="modal">
-      <div class="modalHeader">
-        <h2>학생 추가</h2>
+      <div class="modalHeader light-green lighten-3">
+        <h2 class="text-h5 white--text">학생 추가</h2>
         <v-btn icon text @click="closeModal">
-          <v-icon>mdi-close</v-icon>
+          <v-icon class="text-h5 white--text">mdi-close</v-icon>
         </v-btn>
       </div>
       <ValidationObserver ref="signInForm" v-slot="{ handleSubmit, invalid, validate }">
@@ -15,6 +15,7 @@
               class="textField"
               label="학생 이름"
               outlined
+              maxlength="3"
               :error-messages="errors"
             ></v-text-field>
           </ValidationProvider>
@@ -123,8 +124,11 @@ export default {
 
 .modalHeader {
   display: flex;
-  margin: 0px 40px 40px 40px;
+  margin: 0px 0px 20px 0px;
   padding-top: 40px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 20px;
   justify-content: space-between;
 }
 

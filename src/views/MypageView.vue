@@ -12,7 +12,7 @@
             <ValidationProvider v-slot="{ errors }" name="선생님 성함" rules="required">
               <v-text-field
                 v-model="name"
-                maxlength="11"
+                maxlength="3"
                 dense
                 outlined
                 color="light-green lighten-4"
