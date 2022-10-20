@@ -29,6 +29,7 @@
                   <th class="text-center">이름</th>
                   <th class="text-center">학교</th>
                   <th class="text-center">학년</th>
+                  <th class="text-center">성별</th>
                   <th class="text-center">학부모 연락처</th>
                   <th class="text-center">삭제</th>
                 </tr>
@@ -40,6 +41,7 @@
                     {{ item.school }}
                   </td>
                   <td class="text-center">{{ item.stuGrade }}</td>
+                  <td class="text-center">{{ item.stuGender }}</td>
                   <td class="text-center">{{ item.phoneNum }}</td>
                   <td class="text-center">
                     <v-btn color="pink closeBtn" dark fab x-small @click.stop="deleteStudent(item.id)"

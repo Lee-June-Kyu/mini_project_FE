@@ -1,9 +1,7 @@
 <template>
   <div>
     <side-bar></side-bar>
-    <div class="schedulePageHeader">
-      <h1>출결 히스토리</h1>
-    </div>
+    <div class="schedulePageHeader"></div>
     <div class="historyContentArea">
       <div class="searchArea">
         <div class="searchName">이름 검색</div>
@@ -125,12 +123,12 @@ export default {
   width: 70vw;
   height: 78vh;
   margin: auto;
-  border: 1px solid black;
   border-radius: 20px;
   padding: 15px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  background-color: rgba(239, 245, 239, 0.845);
 }
 .searchArea {
 }
@@ -158,13 +156,13 @@ $autocomplete-enclosed-input-margin-top: 0px;
   margin: 10px;
   margin-bottom: 20px;
   text-align: center;
+  color: rgb(20, 24, 21);
 }
 .contentTable {
-  border: 1px solid black;
   border-radius: 20px;
   box-sizing: border-box;
   padding: 10px;
-  background-color: #dcedc8;
+  background-color: #c0c3be6d;
 }
 .tableName {
   font-size: x-large;
