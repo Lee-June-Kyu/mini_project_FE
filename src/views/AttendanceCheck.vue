@@ -1,12 +1,9 @@
 <template>
   <div>
     <side-bar v-if="sidebarStatue"></side-bar>
+    <v-app-bar-nav-icon elevation="5" @click="sidebarStatue = !sidebarStatue"></v-app-bar-nav-icon>
     <div class="firstDiv">
       <div class="checkPageHeader">
-
-        <h1>출석체크</h1>
-        <v-btn @click="closeSideBar">사이드바 닫기</v-btn>
-        <v-btn @click="openSideBar">사이드바 열기</v-btn>
         <div class="fullscreenbtn">
           <button v-if="!inputStatus" @click="openFullScreen">전체화면 열기<v-icon>mdi-fullscreen</v-icon></button>
           <button v-if="inputStatus" @click="checkInputPassword">
@@ -47,7 +44,10 @@
             <div class="nameBox">
               <span text style="font-size: 1.5em">{{ student.stuName }}</span>
               <span>{{ student.attendTime }}</span>
-              <v-btn text class="hove" @click="displayDate(student)">출석하기</v-btn>
+              <v-btn v-if="student.attendTime == '출석전'" text class="hove" @click="displayDate(student)"
+                >출석하기</v-btn
+              >
+              <v-btn v-else text class="hove2" @click="crossCheckDelete(student)">출석 취소하기</v-btn>
             </div>
           </div>
           <!-- <div class="femaleImgDiv"></div> -->
@@ -90,9 +90,8 @@ export default {
     //전체학생가져오기
     //출석부 존재하는 시간 필터해서 넣기
     checkTimes: [],
-    haveTime: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시']
+    haveTime: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시'],
     sidebarStatue: true
-
   }),
 
   computed: {
@@ -102,11 +101,6 @@ export default {
       // console.log('this.checkTime에 값 잘 들어왔는지?', this.checkTimes)
       return this.checkTimes.filter(student => student.lessonDate.split('/')[3].split(':')[0] == this.vmodelTime + 14)
     }
-    // tt(val) {
-    //   // val.split('/')[3].split(':')[0] - 12
-    //   console.log(val)
-    //   return '2'
-    // }
   },
   mounted() {
     //시계 함수 테그 id가 time인곳에 나타나게함
@@ -232,20 +226,69 @@ export default {
         )
         .then(async response => {
           console.log('학생 정보 조회 response : ', response)
-          this.closeModal()
         })
         .catch(error => {
           console.log('학생 정보 조회 error : ', error)
         })
     },
+    async crossCheckDelete(e) {
+      var inputPassword = prompt('암호를 입력해주세요')
+      console.log(inputPassword)
+      //로컬에 있는 user정보 확인하고 post할때 user.id를 사용하려고
+      // var user = JSON.parse(localStorage.getItem('user'))
+      //store를 사용하여 user정보를 불러와서 사용했다.
+      let user = this.$store.getters.User
+      await axios
+        .post(
+          process.env.VUE_APP_URL + `/pwCheck/${user.id}`,
+          { id: user.id, inputPassword },
+          { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        )
+        .then(response => {
+          console.log('crossCheckDelete - response : ', response, response.data.boolean)
+          this.userPassword = response.data.boolean
+          console.log('입력값 상태 - response', this.userPassword)
+        })
+        .catch(error => {
+          console.log('입력값 상태 - error : ', error)
+        })
+        .finally(() => {
+          console.log('crossCheckDelete', this.userPassword)
+          if (this.userPassword == true) {
+            return this.deleteCheck(e)
+          }
+        })
+    },
+    //출석취소 누르면 비밀번호 확인 함수 실행 후 새로 값을 '출석전'으로 넣어주고, 값이 출석전이기 때문에
+    //if 출석전 상태 버튼으로 바뀌게한다.
+    async deleteCheck(student) {
+      const userId = this.$store.getters.User.id
+      await axios
+        .patch(
+          process.env.VUE_APP_URL + `/schedule/${userId}/today/${student.id}`,
+          { attendTime: '출석전' },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+        .then(async response => {
+          console.log('deleteCheck response : ', response)
+          this.getCheckList()
+        })
+        .catch(error => {
+          console.log('deleteCheck error : ', error)
+        })
+    },
+    //코멘트 모달 여닫기
     openNotePadStatus() {
       this.statusNotePadModal = true
-
-      console.log('모달클릭', this.statusLookupModal)
+      console.log('모달클릭', this.statusNotePadModal)
     },
     closeNotePadStatus() {
-      console.log('모달닫기', this.statusLookupModal)
       this.statusNotePadModal = false
+      console.log('모달닫기', this.statusNotePadModal)
     },
     //출석부 가져오기
     async getCheckList() {
@@ -320,6 +363,8 @@ export default {
           console.log('학생 정보 조회 error : ', error)
         })
     },
+
+    //사이드바 여닫기
     closeSideBar() {
       this.sidebarStatue = false
     },
@@ -367,7 +412,7 @@ export default {
   padding: 0% 3% 0% 3%;
   margin: auto;
   background: url('../assets/images/background.png') no-repeat;
-  background-size: 100% 140%;
+  background-size: 100% 100%;
   cursor: url('../assets/images/hover.png') 0 0, pointer;
 }
 
@@ -484,6 +529,13 @@ button.tabBtn:focus {
 .hove {
   background: url('../assets/images/tabsback.png') no-repeat;
   background-size: 100% 100%;
+  height: auto;
+  width: 100%;
+}
+.hove2 {
+  background: url('../assets/images/tabsback.png') no-repeat;
+  background-size: 100% 100%;
+  background-color: rgb(164, 164, 164);
   height: auto;
   width: 100%;
 }
