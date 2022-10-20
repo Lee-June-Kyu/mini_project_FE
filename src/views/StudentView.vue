@@ -41,7 +41,11 @@
                   </td>
                   <td class="text-center">{{ item.stuGrade }}</td>
                   <td class="text-center">{{ item.phoneNum }}</td>
-                  <td class="text-center"><v-btn @click.stop="deleteStudent(item.id)">삭제</v-btn></td>
+                  <td class="text-center">
+                    <v-btn color="pink closeBtn" dark fab x-small @click.stop="deleteStudent(item.id)"
+                      ><v-icon dark> mdi-close </v-icon></v-btn
+                    >
+                  </td>
                 </tr>
               </tbody>
             </template>
@@ -200,5 +204,8 @@ export default {
 }
 .v-text-field {
   width: 30px;
+}
+.closeBtn:hover {
+  transform: scale(1.2);
 }
 </style>

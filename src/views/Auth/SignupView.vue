@@ -47,7 +47,7 @@
                   <v-text-field
                     v-model="teacherName"
                     outlined
-                    maxlength="11"
+                    maxlength="3"
                     label="선생님 성함"
                     color="#aed581"
                     placeholder="선생님 성함(원어민 선생님도 가능한 한국이름 입력"
