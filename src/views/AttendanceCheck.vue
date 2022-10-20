@@ -1,9 +1,12 @@
 <template>
   <div>
-    <side-bar></side-bar>
+    <side-bar v-if="sidebarStatue"></side-bar>
     <div class="firstDiv">
       <div class="checkPageHeader">
-        <!-- <h1>출석체크</h1> -->
+
+        <h1>출석체크</h1>
+        <v-btn @click="closeSideBar">사이드바 닫기</v-btn>
+        <v-btn @click="openSideBar">사이드바 열기</v-btn>
         <div class="fullscreenbtn">
           <button v-if="!inputStatus" @click="openFullScreen">전체화면 열기<v-icon>mdi-fullscreen</v-icon></button>
           <button v-if="inputStatus" @click="checkInputPassword">
@@ -38,6 +41,7 @@
             </div>
           </div>
         </div>
+
         <div class="checkBox">
           <div v-for="student in computedStudents" :key="student.index" class="maleImgDiv">
             <div class="nameBox">
@@ -87,6 +91,8 @@ export default {
     //출석부 존재하는 시간 필터해서 넣기
     checkTimes: [],
     haveTime: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시']
+    sidebarStatue: true
+
   }),
 
   computed: {
@@ -96,6 +102,11 @@ export default {
       // console.log('this.checkTime에 값 잘 들어왔는지?', this.checkTimes)
       return this.checkTimes.filter(student => student.lessonDate.split('/')[3].split(':')[0] == this.vmodelTime + 14)
     }
+    // tt(val) {
+    //   // val.split('/')[3].split(':')[0] - 12
+    //   console.log(val)
+    //   return '2'
+    // }
   },
   mounted() {
     //시계 함수 테그 id가 time인곳에 나타나게함
@@ -229,6 +240,7 @@ export default {
     },
     openNotePadStatus() {
       this.statusNotePadModal = true
+
       console.log('모달클릭', this.statusLookupModal)
     },
     closeNotePadStatus() {
@@ -307,6 +319,12 @@ export default {
         .catch(error => {
           console.log('학생 정보 조회 error : ', error)
         })
+    },
+    closeSideBar() {
+      this.sidebarStatue = false
+    },
+    openSideBar() {
+      this.sidebarStatue = true
     }
   }
 }
