@@ -3,7 +3,6 @@
     <side-bar v-if="sidebarStatue"></side-bar>
     <div class="firstDiv">
       <div class="checkPageHeader">
-
         <h1>출석체크</h1>
         <v-btn @click="closeSideBar">사이드바 닫기</v-btn>
         <v-btn @click="openSideBar">사이드바 열기</v-btn>
@@ -90,9 +89,8 @@ export default {
     //전체학생가져오기
     //출석부 존재하는 시간 필터해서 넣기
     checkTimes: [],
-    haveTime: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시']
+    haveTime: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시'],
     sidebarStatue: true
-
   }),
 
   computed: {

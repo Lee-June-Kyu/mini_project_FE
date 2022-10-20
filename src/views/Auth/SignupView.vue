@@ -75,6 +75,7 @@
                     :error-messages="errors"
                   ></v-text-field>
                 </ValidationProvider>
+                <v-btn text color="primary" class="pl-0" @click="goSignIn">돌아가기</v-btn>
                 <span class="err">{{ errorMessage }}</span>
                 <div class="d-flex justify-end">
                   <v-btn
@@ -117,6 +118,9 @@ export default {
     }
   },
   methods: {
+    goSignIn() {
+      this.$router.push('/signin')
+    },
     async signUp() {
       if (this.loading) return
       this.loading = true
