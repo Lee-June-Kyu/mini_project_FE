@@ -20,4 +20,7 @@ export default {
   background: url('assets/images/main.png') no-repeat;
   background-size: 100%;
 }
+* {
+  font-family: 'Jua', sans-serif;
+}
 </style>

@@ -2,7 +2,7 @@
   <nav>
     <!-- 내브바 서랍 메뉴 -->
     <v-navigation-drawer app permanent class="light-green lighten-4 navbarInfo">
-      <v-list nav dense>
+      <v-list nav dense shaped>
         <br />
         <br />
         <v-list-item>
@@ -23,46 +23,46 @@
         </v-list-item>
         <br />
         <v-divider></v-divider>
-        <v-list-item link @click="goHome">
+        <v-list-item link dense @click="goHome">
           <v-list-item-icon>
-            <v-icon>mdi-home-variant</v-icon>
+            <v-icon large class="listItemIcon">mdi-home-variant</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>홈 페이지</v-list-item-title>
+          <v-list-item-title class="listItemTitle"> <span class="tabFont">홈 페이지 </span></v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item link @click="goAttendPage">
           <v-list-item-icon>
-            <v-icon>mdi-calendar-check</v-icon>
+            <v-icon large class="listItemIcon">mdi-calendar-check</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>출석체크</v-list-item-title>
+          <v-list-item-title class="listItemTitle"> <span class="tabFont">출석체크 </span></v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item link @click="goStudentPage">
           <v-list-item-icon>
-            <v-icon>mdi-account-school</v-icon>
+            <v-icon large class="listItemIcon">mdi-account-school</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>학생 관리</v-list-item-title>
+          <v-list-item-title class="listItemTitle"> <span class="tabFont">학생 관리 </span></v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item link @click="goSchedulePage">
           <v-list-item-icon>
-            <v-icon>mdi-calendar-plus</v-icon>
+            <v-icon large class="listItemIcon">mdi-calendar-plus</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>시간표 관리</v-list-item-title>
+          <v-list-item-title class="listItemTitle"><span class="tabFont">시간표 관리</span></v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item link @click="goAttendHistoryPage">
           <v-list-item-icon>
-            <v-icon>mdi-calendar-search</v-icon>
+            <v-icon large class="listItemIcon"> mdi-calendar-search</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>출결 관리</v-list-item-title>
+          <v-list-item-title class="listItemTitle"> <span class="tabFont">출결 관리</span></v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item link @click="goNotepadPage">
           <v-list-item-icon>
-            <v-icon>mdi-note-text</v-icon>
+            <v-icon large class="listItemIcon"> mdi-note-text</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>메모 관리</v-list-item-title>
+          <v-list-item-title class="listItemTitle"><span class="tabFont">메모 관리</span></v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -157,5 +157,23 @@ export default {
 
 .navbarInfo {
   background: url('../assets/images/sidebar.png') no-repeat;
+}
+.listItemTitle {
+  // text-align: center;
+  padding-left: 10px;
+  padding-top: 10px;
+  // font-size: 25px;
+}
+.listItemIcon {
+  padding-left: 5px;
+  padding-top: 15px;
+}
+.v-list-item--link {
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+.tabFont {
+  font-size: large;
 }
 </style>

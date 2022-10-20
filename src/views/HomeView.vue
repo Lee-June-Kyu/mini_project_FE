@@ -9,7 +9,7 @@
       <div class="contentArea">
         <section class="useSection">
           <div class="sectionTitle">
-            <span class="sectionMainTitle">어서오세요 Wanni입니다.</span>
+            <span class="sectionMainTitle titleColor">어서오세요 Wanni입니다.</span>
             <span class="sectionMainDescription">아래의 사용법을 참고해주세요.</span>
           </div>
           <v-divider></v-divider>
@@ -18,15 +18,18 @@
               <v-icon x-large>mdi-numeric-1-circle-outline</v-icon>
               <div class="subDescription">
                 <span class="subTitle">학생 추가</span
-                ><span>우선 학생관리 탭을 눌러서 학생 정보를 추가해주세요.이제 학생 정보를 관리할 수 있습니다.</span>
+                ><span class="fontColor"
+                  >우선 학생관리 탭을 눌러서 학생 정보를 추가해주세요.이제 학생 정보를 관리할 수 있습니다.</span
+                >
               </div>
             </div>
             <v-divider></v-divider>
             <div class="useDetailSection--2">
               <v-icon x-large>mdi-numeric-2-circle-outline</v-icon>
               <div class="subDescription">
-                <span class="subTitle">시간표 추가</span><span>시간표 탭을 눌러서 원하는 시간표를 추가해주세요.</span
-                ><span>시간표는 일/주/월 단위로 조회할 수 있습니다.</span>
+                <span class="subTitle">시간표 추가</span
+                ><span class="fontColor">시간표 탭을 눌러서 원하는 시간표를 추가해주세요.</span
+                ><span class="fontColor">시간표는 일/주/월 단위로 조회할 수 있습니다.</span>
               </div>
             </div>
             <v-divider></v-divider>
@@ -34,8 +37,8 @@
               <v-icon x-large>mdi-numeric-3-circle-outline</v-icon>
               <div class="subDescription">
                 <span class="subTitle">출석 확인</span
-                ><span>출석확인 탭을 누르면 편하게 출석 확인을 할수 있습니다.</span
-                ><span>앞으로 편하게 출석확인이 가능합니다.</span>
+                ><span class="fontColor">출석확인 탭을 누르면 편하게 출석 확인을 할수 있습니다.</span
+                ><span class="fontColor">앞으로 편하게 출석확인이 가능합니다.</span>
               </div>
             </div>
             <v-divider></v-divider>
@@ -43,27 +46,27 @@
               <v-icon x-large>mdi-numeric-4-circle-outline</v-icon>
               <div class="subDescription">
                 <span class="subTitle">출결 및 메모 확인</span
-                ><span>학생들의 출결 정보와 당신의 메모도 확인할 수 있습니다.</span>
+                ><span class="fontColor">학생들의 출결 정보와 당신의 메모도 확인할 수 있습니다.</span>
               </div>
             </div>
           </div>
         </section>
-        <h2>오늘의 일정</h2>
+        <h2 class="titleColor">오늘의 일정</h2>
         <section class="statsSection">
           <div class="statsSectionInner">
             <div class="innerSection subTitle">
               <div>수업 수</div>
-              <div>{{ lessonDates.length }}</div>
+              <div class="numberFont titleColor">{{ lessonDates.length }}</div>
             </div>
             <v-divider vertical class="dividerVertical"></v-divider>
             <div class="innerSection subTitle">
               <div>출결 학생</div>
-              <div>{{ countStudent }}</div>
+              <div class="numberFont titleColor">{{ countStudent }}</div>
             </div>
             <v-divider vertical class="dividerVertical"></v-divider>
             <div class="innerSection subTitle">
               <div>출결한 학생 수</div>
-              <div>{{ countAttendance }}</div>
+              <div class="numberFont titleColor">{{ countAttendance }}</div>
             </div>
           </div>
         </section>
@@ -172,7 +175,7 @@ export default {
   /* margin-right: 10%; */
   /* padding: 15px 50px 15px 50px; */
   border-radius: 10px;
-  border: 1px solid #9ccc65;
+  /* border: 1px solid #9ccc65; */
   box-sizing: border-box;
   margin-bottom: 40px;
 }
@@ -180,10 +183,12 @@ export default {
   background-color: #dcedc8;
   padding: 20px;
   border-radius: 10px 10px 0 0;
+  /* margin-left: 20px; */
+  padding-left: 50px;
 }
 .sectionMainTitle {
   display: block;
-  font-size: x-large;
+  font-size: xx-large;
   font-weight: bolder;
 }
 
@@ -244,12 +249,13 @@ export default {
 .subTitle {
   display: block;
   font-size: large;
+  font-weight: bold;
 }
 .subDescription {
   margin-left: 20px;
 }
 .statsSection {
-  border: 1px solid #9ccc65;
+  /* border: 1px solid #9ccc65; */
   background-color: white;
   border-radius: 10px;
   width: 100%;
@@ -277,7 +283,7 @@ export default {
 .innerSection {
   width: 20%;
   height: 100%;
-  border: 1px solid #dcedc8;
+  /* border: 1px solid #dcedc8; */
   /* background-color: orange; */
   display: flex;
   justify-content: center;
@@ -286,6 +292,26 @@ export default {
   border-radius: 50%;
 }
 .innerSection:hover {
+  /* background-color: #dcedc8; */
+  /* text-decoration: green wavy underline; */
+}
+.numberFont {
+  font-size: xx-large;
+  border-radius: 50%;
+  /* background-color: #dcedc8; */
+  width: 50px;
+  height: 50px;
+  text-align: center;
+}
+.numberFont:hover {
+  /* background-color: #dcedc8; */
+  /* text-decoration: green wavy underline; */
   background-color: #dcedc8;
+}
+.fontColor {
+  color: gray;
+}
+.titleColor {
+  color: #0d4010;
 }
 </style>
