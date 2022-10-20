@@ -2,8 +2,10 @@
   <div>
     <side-bar></side-bar>
     <div class="schedulePageHeader">
-      <h1>시간표 관리</h1>
+      <!-- <h1>시간표 관리</h1> -->
       <div class="schedulePlusBtnBox">
+        <div></div>
+        <h1>Wanni Schedule</h1>
         <v-btn class="schedulePlusBtn" @click="openCreateScheduleModal">시간표 추가</v-btn>
       </div>
     </div>
@@ -15,7 +17,7 @@
         </v-btn>
         <v-select v-model="type" :items="types" dense outlined hide-details class="ma-2" label="일/주/월"></v-select>
         <v-spacer> </v-spacer>
-        <div class="ma-2 titleSchedule">Wanni Schedule</div>
+        <div class="ma-2 titleSchedule"></div>
         <v-spacer> </v-spacer>
         <v-select
           v-model="weekday"
@@ -23,7 +25,7 @@
           dense
           outlined
           hide-details
-          label="일주일단위"
+          label="주단위설정"
           class="ma-2"
         ></v-select>
 
@@ -31,7 +33,7 @@
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-sheet>
-      <v-sheet height="600">
+      <v-sheet height="520">
         <v-calendar
           ref="calendar"
           v-model="value"
@@ -186,14 +188,16 @@ export default {
 }
 
 .schedulePageHeader {
-  margin: 30px 100px 30px 100px;
+  margin: 30px 70px 0px 200px;
   display: flex;
   align-content: flex-end;
   flex-direction: column;
 }
 
 .schedulePlusBtnBox {
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .schedulePlusBtn {

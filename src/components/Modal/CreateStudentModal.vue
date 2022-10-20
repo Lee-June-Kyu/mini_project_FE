@@ -29,6 +29,9 @@
               :error-messages="errors"
             ></v-text-field>
           </ValidationProvider>
+
+          <v-select v-model="bodyObj.stuGender" class="textField" :items="options" label="성별" outlined> </v-select>
+
           <ValidationProvider v-slot="{ errors }" name="학교 이름" rules="required">
             <v-text-field
               v-model="bodyObj.school"
@@ -68,12 +71,19 @@ export default {
   },
   data() {
     return {
+      // selected: '',
+      options: [
+        // { value: null, text: '성별을 골라주세요.' },
+        { value: '남', text: '남' },
+        { value: '여', text: '여' }
+      ],
       bodyObj: {
         stuName: '',
         stuGrade: '',
         school: '',
         phoneNum: '',
-        etc: ''
+        etc: '',
+        stuGender: ''
       }
     }
   },
@@ -92,6 +102,7 @@ export default {
       this.bodyObj.school = ''
       this.bodyObj.phoneNum = ''
       this.bodyObj.etc = ''
+      this.bodyObj.stuGender = ''
     },
     closeModal() {
       this.initValue()
