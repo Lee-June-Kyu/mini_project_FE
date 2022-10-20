@@ -10,8 +10,16 @@
 
       <div class="modalContent">
         <h1>{{ getItem }}일자 메모사항</h1>
-        <h3 for="content">내용</h3>
-        <textarea id="textarea" cols="30" rows="10" placeholder="내용" class="textarea"></textarea>
+        <h3>comment히스토리</h3>
+        <div class="textareaHistory">
+          <div v-for="(getCo, i) in getComments" :key="i">
+            <span>메세지 : {{ getCo.message }} &nbsp;&nbsp;&nbsp;</span>
+            <span>작성시간 :{{ getCo.createdAt }}</span>
+          </div>
+        </div>
+        <h3>내용입력</h3>
+        <textarea id="textarea" placeholder="내용" class="textarea"></textarea>
+
         <div class="commentContent">
           <div></div>
           <v-btn class="updateBtn" @click="updateComment">작성완료</v-btn>
@@ -30,7 +38,8 @@ export default {
   },
   data() {
     return {
-      inputStatus: false
+      inputStatus: false,
+      getComments: []
     }
   },
   computed: {
@@ -40,6 +49,9 @@ export default {
     getItem(props) {
       return props.itemObject
     }
+  },
+  mounted() {
+    this.getComment()
   },
   methods: {
     closeModal() {
@@ -62,9 +74,35 @@ export default {
         })
         .then(response => {
           console.log('updateComment - response : ', response, response.data)
+          this.closeModal()
+          this.getComment()
+          alert('코멘트 작성 완료')
         })
         .catch(error => {
           console.log('updateComment post error : ', error)
+        })
+    },
+    async getComment() {
+      const userId = this.$store.getters.User.id
+      await axios
+        .post(
+          process.env.VUE_APP_URL + `/comment/${userId}/today`,
+          { date: this.getItem },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+        .then(response => {
+          console.log('getComment - response : ', response, response.data.data)
+          this.getComments = response.data.data
+          // for (let i = 0; i < this.getConmments.length; i++) {
+          //   this.getConmments[i]
+          // }
+        })
+        .catch(error => {
+          console.log('getComment error : ', error)
         })
     }
   }
@@ -95,8 +133,15 @@ export default {
   height: 100%;
   width: 100%;
 }
+.textareaHistory {
+  height: 80%;
+  width: 100%;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 10px;
+  background-color: #ececec;
+}
 .textarea {
-  height: 100%;
+  height: 20%;
   width: 100%;
   border: 2px solid rgb(0, 0, 0);
   border-radius: 10px;
