@@ -7,7 +7,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </div>
-
+      <v-btn @click="loadlastSchedule">시간표 불러오기</v-btn>
       <form>
         <h3>날짜 선택</h3>
         <v-menu
@@ -79,9 +79,10 @@ export default {
     return {
       date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       menu: false,
-      items: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시', '10시'],
+      items: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시'],
       students: [],
-      studentsValue: [[], [], [], [], [], [], [], [], []]
+      studentsValue: [[], [], [], [], [], [], [], []],
+      schedule: []
     }
   },
   computed: {
@@ -92,6 +93,7 @@ export default {
   mounted() {
     this.initData()
     this.getStudents()
+    this.loadSchedule()
   },
   methods: {
     initData() {
@@ -155,6 +157,37 @@ export default {
         .catch(error => {
           console.log('학생 정보 조회 error : ', error)
         })
+    },
+    async loadSchedule() {
+      console.log('스케줄 불러오기')
+      const userId = this.$store.getters.User.id
+      await axios
+        .get(process.env.VUE_APP_URL + `/schedule/${userId}/all`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        .then(response => {
+          console.log('유저 스케줄 조회 response : ', response)
+          this.schedule = response.data.data
+          console.log('올 스케줄22 : ', this.schedule)
+        })
+        .catch(error => {
+          console.log('유저 스케줄 조회 error : ', error)
+        })
+    },
+    loadlastSchedule() {
+      let tempArray = []
+      for (let i = 0; i < this.schedule.length; i++) {
+        let tempDate2 = this.date.replace(/-/g, '/')
+        if (tempDate2.split('/')[2] - 7 == this.schedule[i].lessonDate.split('/')[2]) {
+          tempArray.push(this.schedule[i])
+        }
+      }
+
+      for (let i = 0; i < tempArray.length; i++) {
+        this.studentsValue[Number(tempArray[i].lessonDate.split('/')[3].split(':')[0]) - 14].push(tempArray[i].stuName)
+      }
     }
   }
 }

@@ -49,7 +49,11 @@
         ></v-calendar>
       </v-sheet>
     </div>
-    <CreateScheduleModal :open-dialog="statusModal" @closeDialog="closeCreateScheduleModal"></CreateScheduleModal>
+    <CreateScheduleModal
+      :open-dialog="statusModal"
+      :schedule-list="allSchedule"
+      @closeDialog="closeCreateScheduleModal"
+    ></CreateScheduleModal>
   </div>
 </template>
 
