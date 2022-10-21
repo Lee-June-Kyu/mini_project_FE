@@ -100,6 +100,9 @@ export default {
           // for (let i = 0; i < this.getConmments.length; i++) {
           //   this.getConmments[i]
           // }
+          this.getComments = response.data.data.filter(note => {
+            return note.date == this.getItem
+          })
         })
         .catch(error => {
           console.log('getComment error : ', error)
