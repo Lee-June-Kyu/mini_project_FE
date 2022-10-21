@@ -63,9 +63,9 @@ export default {
     }
   },
   methods: {
-    async closeModal() {
+    closeModal() {
       this.inputStatus = false
-      await this.$emit('closeDialog')
+      this.$emit('closeDialog')
     },
     changeStatus() {
       this.inputStatus = true

@@ -45,6 +45,7 @@
             <v-text-field
               v-model="bodyObj.phoneNum"
               :error-messages="errors"
+              maxlength="11"
               class="textField"
               label="학부모 연락처"
               outlined
