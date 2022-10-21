@@ -70,14 +70,14 @@ export default {
   },
   methods: {
     closeModal() {
-      this.inputStatus = !this.inputStatus
+      this.inputStatus = false
       this.$emit('closeDialog')
     },
     changeStatus() {
-      this.inputStatus = !this.inputStatus
+      this.inputStatus = true
     },
     async updateInfo() {
-      this.inputStatus = !this.inputStatus
+      this.inputStatus = false
       let axiosbody = {}
       axiosbody.stuName = this.getItem.stuName
       axiosbody.school = this.getItem.school

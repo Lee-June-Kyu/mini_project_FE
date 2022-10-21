@@ -63,15 +63,16 @@ export default {
     }
   },
   methods: {
-    closeModal() {
-      this.$emit('closeDialog')
+    async closeModal() {
+      this.inputStatus = false
+      await this.$emit('closeDialog')
     },
     changeStatus() {
-      this.inputStatus = !this.inputStatus
+      this.inputStatus = true
     },
     updateInfo() {
       console.log('수정완료')
-      this.inputStatus = !this.inputStatus
+      this.inputStatus = false
     }
   }
 }

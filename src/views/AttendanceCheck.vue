@@ -1,10 +1,15 @@
 <template>
   <div>
     <side-bar v-if="sidebarStatue"></side-bar>
-    <v-app-bar-nav-icon elevation="5" @click="sidebarStatue = !sidebarStatue"></v-app-bar-nav-icon>
+    <!-- <v-app-bar-nav-icon elevation="5" @click="sidebarStatue = !sidebarStatue"></v-app-bar-nav-icon> -->
+    <v-btn v-if="sidebarStatue" elevation="2" icon @click="sidebarStatue = !sidebarStatue"
+      ><v-icon>mdi-arrow-left-bold-box-outline</v-icon></v-btn
+    >
+    <v-btn v-else elevation="5" icon @click="sidebarStatue = !sidebarStatue"
+      ><v-icon>mdi-arrow-right-bold-box-outline</v-icon></v-btn
+    >
     <div class="firstDiv">
       <div class="checkPageHeader">
-
         <div class="fullscreenbtn">
           <button v-if="!inputStatus" @click="openFullScreen">전체화면 열기<v-icon>mdi-fullscreen</v-icon></button>
           <button v-if="inputStatus" @click="checkInputPassword">
@@ -28,7 +33,7 @@
 
       <div class="checkPageContent">
         <div class="timeDivP parent">
-          <div id="time"></div>
+          <div id="time">&nbsp;</div>
         </div>
         <div>
           <div class="tabsDiv">
@@ -91,9 +96,8 @@ export default {
     //전체학생가져오기
     //출석부 존재하는 시간 필터해서 넣기
     checkTimes: [],
-    haveTime: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시']
+    haveTime: ['2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시'],
     sidebarStatue: true
-
   }),
 
   computed: {
@@ -114,7 +118,7 @@ export default {
       let dates = now.getDate()
       this.today = `${years}/${months}/${dates}`
       document.querySelector('#time').innerHTML = now.toLocaleString('ko-kr')
-    }, 1000) // 1초마다 함수 실행되도록 설정
+    }, 10) // 1초마다 함수 실행되도록 설정
     this.getCheckList()
   },
   destroyed() {

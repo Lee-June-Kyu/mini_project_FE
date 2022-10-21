@@ -7,17 +7,7 @@
         <div class="searchName">이름 검색</div>
         <div class="searchArea__outer">
           <div class="searchArea__inner">
-            <v-autocomplete
-              v-model="stuName"
-              class="ma-0"
-              chips
-              clearable
-              filled
-              rounded
-              solo
-              :items="students"
-              outlined
-            >
+            <v-autocomplete v-model="stuName" class="ma-0" chips clearable filled solo :items="students" outlined>
             </v-autocomplete>
           </div>
           <v-btn class="searchBtn" height="50px" @click="searchStudent">검색</v-btn>

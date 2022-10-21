@@ -185,7 +185,7 @@ h1 {
 }
 
 .btnArea {
-  margin-top: 50px;
+  margin-top: 15px;
   display: flex;
   flex-direction: row-reverse;
 }
