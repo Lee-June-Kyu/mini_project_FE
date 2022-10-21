@@ -72,7 +72,28 @@ export default {
         .then(async response => {
           console.log('학생 출결 조회 response : ', response)
           console.log(response.data.data)
-          this.schedule = response.data.data
+          // this.schedule = response.data.data
+          this.schedule = []
+          const now = new Date()
+          let years = now.getFullYear()
+          let months = now.getMonth() + 1
+          let dates = now.getDate()
+          this.today = `${years}/${months}/${dates}`
+
+          let tempObj = {}
+          for (let i = 0; i < response.data.data.length; i++) {
+            tempObj = {}
+            tempObj.lessonDate = response.data.data[i].lessonDate
+            if (now > new Date(`${response.data.data[i].lessonDate}`) && response.data.data[i].attendTime == '출석전') {
+              tempObj.attendTime = '결석'
+            } else if (now < new Date(`${response.data.data[i].lessonDate}`)) {
+              tempObj.attendTime = '출석 예정'
+            } else {
+              tempObj.attendTime = response.data.data[i].attendTime
+            }
+            this.schedule.push(tempObj)
+          }
+
           this.tableStuName = response.data.data[0].stuName
         })
         .catch(error => {

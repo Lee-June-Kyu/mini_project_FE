@@ -46,17 +46,38 @@
         </div>
 
         <div class="checkBox">
-          <div v-for="student in computedStudents" :key="student.index" class="maleImgDiv">
-            <div class="nameBox">
-              <span text style="font-size: 1.5em">{{ student.stuName }}</span>
-              <span>{{ student.attendTime }}</span>
-              <v-btn v-if="student.attendTime == '출석전'" text class="hove" @click="displayDate(student)"
-                >출석하기</v-btn
-              >
-              <v-btn v-else text class="hove2" @click="crossCheckDelete(student)">출석 취소하기</v-btn>
+          <div v-for="student in computedStudents" :key="student.index">
+            <div :class="student.genderImg">
+              <div class="nameBox">
+                <span text style="font-size: 1.5em">{{ student.stuName }}</span>
+                <span>{{ student.attendTime }}</span>
+                <v-btn v-if="student.attendTime == '출석전'" text class="hove" @click="displayDate(student)"
+                  >출석하기</v-btn
+                >
+                <v-btn v-else text class="hove2" @click="crossCheckDelete(student)">출석 취소하기</v-btn>
+              </div>
             </div>
+            <!-- <div v-if="student.Student.stuGender == '남'" class="maleImgDiv">
+              <div class="nameBox">
+                <span text style="font-size: 1.5em">{{ student.stuName }}</span>
+                <span>{{ student.attendTime }}{{ student.Student.stuGender }}</span>
+                <v-btn v-if="student.attendTime == '출석전'" text class="hove" @click="displayDate(student)"
+                  >출석하기</v-btn
+                >
+                <v-btn v-else text class="hove2" @click="crossCheckDelete(student)">출석 취소하기</v-btn>
+              </div>
+            </div>
+            <div v-if="student.Student.stuGender == '여'" class="femaleImgDiv">
+              <div class="nameBox">
+                <span text style="font-size: 1.5em">{{ student.stuName }}</span>
+                <span>{{ student.attendTime }}testtest{{ student.Student.stuGender }}</span>
+                <v-btn v-if="student.attendTime == '출석전'" text class="hove" @click="displayDate(student)"
+                  >출석하기</v-btn
+                >
+                <v-btn v-else text class="hove2" @click="crossCheckDelete(student)">출석 취소하기</v-btn>
+              </div>
+            </div>-->
           </div>
-          <!-- <div class="femaleImgDiv"></div> -->
         </div>
       </div>
     </div>
@@ -105,7 +126,10 @@ export default {
     computedStudents() {
       // console.log('클릭한 인덱스', this.vmodelTime)
       // console.log('this.checkTime에 값 잘 들어왔는지?', this.checkTimes)
-      return this.checkTimes.filter(student => student.lessonDate.split('/')[3].split(':')[0] == this.vmodelTime + 14)
+      return this.checkTimes.filter(student => {
+        student.genderImg = student.Student.stuGender === '남' ? 'maleImgDiv' : 'femaleImgDiv'
+        return student.lessonDate.split('/')[3].split(':')[0] == this.vmodelTime + 14
+      })
     }
   },
   mounted() {
@@ -361,7 +385,7 @@ export default {
               arr2.push(this.students[i])
             }
           }
-          // console.log('arr2= 중복제거 후 오늘 날자만 filter:', arr2)
+          console.log('arr2=checkTimes 중복제거 후 오늘 날자 학생들만 filter:', arr2)
 
           this.checkTimes = arr2
         })
@@ -477,7 +501,7 @@ export default {
   grid-template-rows: 46% 43% 11%;
   z-index: 10;
 }
-/* .femaleImgDiv {
+.femaleImgDiv {
   width: 100%;
   height: 100%;
   background: url('../assets/images/female.png') no-repeat;
@@ -487,7 +511,7 @@ export default {
   grid-template-columns: 10% 79% 12%;
   grid-template-rows: 46% 43% 11%;
   z-index: 10;
-} */
+}
 
 .nameBox {
   width: 100%;
